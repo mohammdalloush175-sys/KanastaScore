@@ -1,0 +1,38 @@
+<resources>
+    <string-array name="card_ranks">
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>J</item>
+        <item>Q</item>
+        <item>K</item>
+        <item>A</item>
+    </string-array>
+
+    <string-array name="canasta_types">
+        <item>لا كنستا</item>
+        <item>كنستا سوداء</item>
+        <item>كنستا حمراء</item>
+    </string-array>
+
+    <string-array name="target_scores">
+        <item>3000</item>
+        <item>4000</item>
+        <item>5000</item>
+        <item>6000</item>
+        <item>7000</item>
+    </string-array>
+
+    <string-array name="red_threes_options">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+</resources>

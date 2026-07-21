@@ -1,3 +1,54 @@
 <resources>
     <string name="app_name">KanastaScore</string>
+
+    <!-- Match Setup -->
+    <string name="match_setup_title">إعداد المباراة</string>
+    <string name="player_1">اللاعب 1</string>
+    <string name="player_2">اللاعب 2</string>
+    <string name="player_3">اللاعب 3</string>
+    <string name="player_4">اللاعب 4</string>
+    <string name="team_1_name">اسم الفريق 1 (اختياري)</string>
+    <string name="team_2_name">اسم الفريق 2 (اختياري)</string>
+    <string name="target_score_label">السكور النهائي المستهدف</string>
+    <string name="start_match">بدء المباراة</string>
+    <string name="continue_match">متابعة المباراة الحالية</string>
+    <string name="new_match">بدء مباراة جديدة</string>
+    <string name="confirm_new_game">بدء مباراة جديدة سيؤدي لحذف الحالية. هل أنت متأكد؟</string>
+    <string name="yes">نعم</string>
+    <string name="no">لا</string>
+
+    <!-- Round Input -->
+    <string name="round_number_label">الجولة %1$d</string>
+    <string name="target_score_info">الهدف: %1$d</string>
+    <string name="min_points_info">حد التنزيل: %1$d</string>
+    <string name="add_meld">إضافة باب</string>
+    <string name="meld_rank">الرتبة</string>
+    <string name="natural_cards">طبيعي</string>
+    <string name="two_cards">ورقة 2</string>
+    <string name="joker_cards">جوكير</string>
+    <string name="canasta_type">نوع الكنستا</string>
+    <string name="red_threes">الثلاثات الحمراء</string>
+    <string name="exited_label">خروج</string>
+    <string name="remaining_points">نقاط الحرق</string>
+    <string name="preview_result">معاينة النتيجة</string>
+    <string name="view_history">سجل الجولات</string>
+    <string name="total_meld_points">مجموع نقاط الأبواب: %1$d</string>
+
+    <!-- Result -->
+    <string name="result_title">نتيجة الجولة</string>
+    <string name="record_round">تسجيل الجولة</string>
+    <string name="edit_round">تعديل</string>
+    <string name="previous_total">المجموع السابق: %1$d</string>
+    <string name="new_total">المجموع الجديد: %1$d</string>
+    <string name="winner_is">الفائز هو: %1$s!</string>
+
+    <!-- History -->
+    <string name="history_title">سجل الجولات</string>
+    <string name="round_item_title">جولة %1$d</string>
+    <string name="delete_round_confirm">هل أنت متأكد من حذف هذه الجولة؟</string>
+
+    <!-- Validation -->
+    <string name="error_player_names_required">يجب إدخال أسماء جميع اللاعبين</string>
+    <string name="error_invalid_input">مدخلات غير صالحة</string>
+
 </resources>
