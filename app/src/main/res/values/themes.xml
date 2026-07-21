@@ -1,11 +1,66 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.KanastaScore" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+    <style name="Base.Theme.KanastaScore" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Brand Colors -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorOnPrimary">@color/onPrimary</item>
+        <item name="colorPrimaryContainer">@color/primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/onPrimaryContainer</item>
+
+        <item name="colorSecondary">@color/secondary</item>
+        <item name="colorOnSecondary">@color/onSecondary</item>
+        <item name="colorSecondaryContainer">@color/secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/onSecondaryContainer</item>
+
         <item name="android:windowBackground">@color/background</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorOnSurface">@color/onSurface</item>
+        <item name="colorSurfaceVariant">@color/surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/onSurfaceVariant</item>
+        <item name="colorOutline">@color/outline</item>
+
+        <!-- Components Style -->
+        <item name="materialCardViewStyle">@style/Widget.KanastaScore.CardView</item>
+        <item name="materialButtonStyle">@style/Widget.KanastaScore.Button</item>
+        <item name="textInputStyle">@style/Widget.KanastaScore.TextInputLayout</item>
     </style>
 
     <style name="Theme.KanastaScore" parent="Base.Theme.KanastaScore" />
+
+    <!-- Component Styles -->
+    <style name="Widget.KanastaScore.CardView" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardCornerRadius">@dimen/card_corner_radius</item>
+        <item name="cardElevation">@dimen/card_elevation</item>
+        <item name="cardBackgroundColor">@color/surface</item>
+        <item name="strokeWidth">0dp</item>
+    </style>
+
+    <style name="Widget.KanastaScore.Button" parent="Widget.Material3.Button">
+        <item name="cornerRadius">@dimen/button_corner_radius</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingTop">@dimen/spacing_12</item>
+        <item name="android:paddingBottom">@dimen/spacing_12</item>
+    </style>
+
+    <style name="Widget.KanastaScore.TextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxCornerRadiusTopStart">@dimen/chip_corner_radius</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/chip_corner_radius</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/chip_corner_radius</item>
+        <item name="boxCornerRadiusBottomEnd">@dimen/chip_corner_radius</item>
+        <item name="boxStrokeColor">@color/primary</item>
+        <item name="hintTextColor">@color/primary</item>
+    </style>
+
+    <!-- Utility Styles -->
+    <style name="TextAppearance.KanastaScore.Title" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:textColor">@color/onSurface</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextAppearance.KanastaScore.SectionTitle" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:textColor">@color/primary</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
 </resources>

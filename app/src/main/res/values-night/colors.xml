@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand Colors -->
+    <color name="primary">#91BDE0</color>
+    <color name="primaryDark">#1F4E78</color>
+    <color name="primaryContainer">#214B6B</color>
+    <color name="onPrimary">#102C44</color>
+    <color name="onPrimaryContainer">#DCEAF5</color>
+
+    <color name="secondary">#E0B65C</color>
+    <color name="secondaryContainer">#49340E</color>
+    <color name="onSecondary">#49340E</color>
+    <color name="onSecondaryContainer">#F7E8C4</color>
+
+    <!-- UI Colors -->
+    <color name="background">#111417</color>
+    <color name="surface">#191D21</color>
+    <color name="surfaceVariant">#23282E</color>
+    <color name="onSurface">#F2F4F6</color>
+    <color name="onSurfaceVariant">#AEB7C0</color>
+
+    <color name="outline">#454D55</color>
+    <color name="divider">#30363C</color>
+
+    <!-- Semantic Colors -->
+    <color name="canastaRed">#F06A70</color>
+    <color name="canastaRedContainer">#4A1A1C</color>
+    <color name="canastaBlack">#D5D8DC</color>
+    <color name="canastaBlackContainer">#23282E</color>
+
+    <color name="positiveScore">#6BC987</color>
+    <color name="positiveContainer">#143B23</color>
+    <color name="negativeScore">#F07878</color>
+    <color name="negativeContainer">#4C1D1D</color>
+
+    <!-- Legacy Compatibility -->
+    <color name="colorPrimary">@color/primary</color>
+    <color name="colorPrimaryDark">@color/primaryDark</color>
+    <color name="colorAccent">@color/secondary</color>
+    <color name="textPrimary">@color/onSurface</color>
+    <color name="textSecondary">@color/onSurfaceVariant</color>
+</resources>

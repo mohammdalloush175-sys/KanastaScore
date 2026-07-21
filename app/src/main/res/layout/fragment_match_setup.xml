@@ -3,42 +3,57 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:background="@color/background">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="@dimen/spacing_16">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/match_setup_title"
-            android:textSize="24sp"
-            android:textStyle="bold"
+            style="@style/TextAppearance.KanastaScore.Title"
             android:layout_gravity="center"
-            android:layout_marginBottom="24dp"
-            android:textColor="@color/textPrimary"/>
+            android:layout_marginTop="@dimen/spacing_24"
+            android:layout_marginBottom="@dimen/spacing_8"/>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/match_setup_description"
+            android:textColor="@color/onSurfaceVariant"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/spacing_24"/>
+
+        <!-- Team 1 Card -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="8dp"
-            app:cardElevation="2dp"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="@dimen/spacing_16"
+            app:cardBackgroundColor="@color/surface">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="@dimen/spacing_16">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/team_1_label"
+                    style="@style/TextAppearance.KanastaScore.SectionTitle"
+                    android:layout_marginBottom="@dimen/spacing_12"/>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/player_1"
-                    android:layout_marginBottom="8dp">
+                    android:layout_marginBottom="@dimen/spacing_12">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/et_player1"
                         android:layout_width="match_parent"
@@ -50,7 +65,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/player_3"
-                    android:layout_marginBottom="8dp">
+                    android:layout_marginBottom="@dimen/spacing_12">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/et_player3"
                         android:layout_width="match_parent"
@@ -71,24 +86,32 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
+        <!-- Team 2 Card -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="8dp"
-            app:cardElevation="2dp"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="@dimen/spacing_16"
+            app:cardBackgroundColor="@color/surface">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="@dimen/spacing_16">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/team_2_label"
+                    style="@style/TextAppearance.KanastaScore.SectionTitle"
+                    android:textColor="@color/secondary"
+                    android:layout_marginBottom="@dimen/spacing_12"/>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/player_2"
-                    android:layout_marginBottom="8dp">
+                    android:layout_marginBottom="@dimen/spacing_12">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/et_player2"
                         android:layout_width="match_parent"
@@ -100,7 +123,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/player_4"
-                    android:layout_marginBottom="8dp">
+                    android:layout_marginBottom="@dimen/spacing_12">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/et_player4"
                         android:layout_width="match_parent"
@@ -121,34 +144,46 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        <!-- Game Settings Card -->
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/target_score_label"
-            android:layout_marginBottom="24dp">
-            <AutoCompleteTextView
-                android:id="@+id/actv_target_score"
+            android:layout_marginBottom="@dimen/spacing_24">
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="none"/>
-        </com.google.android.material.textfield.TextInputLayout>
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_16">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/target_score_label">
+                    <AutoCompleteTextView
+                        android:id="@+id/actv_target_score"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none"/>
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_start"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/start_match"
-            android:padding="12dp"
-            app:cornerRadius="8dp"/>
+            app:icon="@android:drawable/ic_media_play"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_continue"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/continue_match"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/spacing_8"
             android:visibility="gone"/>
 
     </LinearLayout>

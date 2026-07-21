@@ -34,16 +34,28 @@ class ResultFragment : Fragment() {
         val res2 = ScoreCalculator.calculateScore(team2Input)
 
         binding.tvTeam1Name.text = state.teams[0].name
+        binding.tvTeam1SummaryName.text = state.teams[0].name
+        binding.tvTeam1RoundTotal.text = (if (res1.total >= 0) "+" else "") + res1.total.toString()
+        binding.tvTeam1RoundTotal.setTextColor(
+            if (res1.total >= 0) requireContext().getColor(R.color.positiveScore)
+            else requireContext().getColor(R.color.negativeScore)
+        )
         binding.tvTeam1ResultDetails.text = res1.details.joinToString("\n")
         
         val prev1 = viewModel.getCumulativeScore(0)
-        binding.tvTeam1Progression.text = getString(R.string.previous_total, prev1) + " -> " + getString(R.string.new_total, prev1 + res1.total)
+        binding.tvTeam1Progression.text = getString(R.string.total_progression, prev1, prev1 + res1.total)
 
         binding.tvTeam2Name.text = state.teams[1].name
+        binding.tvTeam2SummaryName.text = state.teams[1].name
+        binding.tvTeam2RoundTotal.text = (if (res2.total >= 0) "+" else "") + res2.total.toString()
+        binding.tvTeam2RoundTotal.setTextColor(
+            if (res2.total >= 0) requireContext().getColor(R.color.positiveScore)
+            else requireContext().getColor(R.color.negativeScore)
+        )
         binding.tvTeam2ResultDetails.text = res2.details.joinToString("\n")
 
         val prev2 = viewModel.getCumulativeScore(1)
-        binding.tvTeam2Progression.text = getString(R.string.previous_total, prev2) + " -> " + getString(R.string.new_total, prev2 + res2.total)
+        binding.tvTeam2Progression.text = getString(R.string.total_progression, prev2, prev2 + res2.total)
 
         // Winner check
         val final1 = prev1 + res1.total

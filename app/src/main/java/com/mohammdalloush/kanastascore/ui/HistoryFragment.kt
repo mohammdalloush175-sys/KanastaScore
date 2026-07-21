@@ -26,6 +26,14 @@ class HistoryFragment : Fragment() {
         val mainActivity = activity as MainActivity
         val viewModel = mainActivity.viewModel
 
+        val state = viewModel.gameState.value
+        if (state != null) {
+            binding.tvTeam1Name.text = state.teams[0].name
+            binding.tvTeam1Total.text = viewModel.getCumulativeScore(0).toString()
+            binding.tvTeam2Name.text = state.teams[1].name
+            binding.tvTeam2Total.text = viewModel.getCumulativeScore(1).toString()
+        }
+
         val adapter = HistoryAdapter(
             viewModel.gameState.value?.rounds ?: emptyList(),
             onEdit = { round ->

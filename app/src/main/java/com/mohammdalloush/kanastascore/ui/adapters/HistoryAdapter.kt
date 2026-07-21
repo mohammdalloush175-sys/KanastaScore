@@ -13,7 +13,7 @@ class HistoryAdapter(
     private val onDelete: (RoundRecord) -> Unit
 ) : RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() {
 
-    inner class HistoryViewHolder(val binding: ItemHistoryRoundBinding) : RecyclerView.ViewHolder(binding.root)
+    class HistoryViewHolder(val binding: ItemHistoryRoundBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryViewHolder {
         val binding = ItemHistoryRoundBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -28,7 +28,16 @@ class HistoryAdapter(
         binding.tvRoundTitle.text = context.getString(R.string.round_item_title, round.roundNumber)
         
         binding.tvTeam1RoundScore.text = (if (round.team1Result.total >= 0) "+" else "") + round.team1Result.total.toString()
+        binding.tvTeam1RoundScore.setTextColor(
+            if (round.team1Result.total >= 0) context.getColor(R.color.positiveScore)
+            else context.getColor(R.color.negativeScore)
+        )
+
         binding.tvTeam2RoundScore.text = (if (round.team2Result.total >= 0) "+" else "") + round.team2Result.total.toString()
+        binding.tvTeam2RoundScore.setTextColor(
+            if (round.team2Result.total >= 0) context.getColor(R.color.positiveScore)
+            else context.getColor(R.color.negativeScore)
+        )
 
         // Cumulative calculation up to this round
         var cum1 = 0

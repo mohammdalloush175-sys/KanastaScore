@@ -65,11 +65,11 @@ class RoundInputFragment : Fragment() {
 
         val t1Score = viewModel.getCumulativeScore(0)
         val t1Min = viewModel.getMinMeldPoints(0)
-        binding.tvTeam1Total.text = "${state.teams[0].name}: $t1Score (حد: $t1Min)"
+        binding.tvTeam1Total.text = getString(R.string.team_summary_header, state.teams[0].name, t1Score, t1Min)
 
         val t2Score = viewModel.getCumulativeScore(1)
         val t2Min = viewModel.getMinMeldPoints(1)
-        binding.tvTeam2Total.text = "${state.teams[1].name}: $t2Score (حد: $t2Min)"
+        binding.tvTeam2Total.text = getString(R.string.team_summary_header, state.teams[1].name, t2Score, t2Min)
     }
 
     private fun setupTeamSection(sectionBinding: LayoutTeamRoundInputBinding, teamIndex: Int, team: Team) {

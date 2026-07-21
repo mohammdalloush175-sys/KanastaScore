@@ -1,22 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <!-- Brand Colors -->
+    <color name="primary">#1F4E78</color>
+    <color name="primaryDark">#163A5A</color>
+    <color name="primaryContainer">#DCEAF5</color>
+    <color name="onPrimary">#FFFFFF</color>
+    <color name="onPrimaryContainer">#102C44</color>
 
-    <color name="colorPrimary">#2196F3</color>
-    <color name="colorPrimaryDark">#1976D2</color>
-    <color name="colorAccent">#FFC107</color>
-    <color name="background">#F5F5F5</color>
-    <color name="cardBackground">#FFFFFF</color>
-    <color name="textPrimary">#212121</color>
-    <color name="textSecondary">#757575</color>
-    <color name="canastaRed">#E53935</color>
-    <color name="canastaBlack">#424242</color>
-    <color name="positiveScore">#2E7D32</color>
-    <color name="negativeScore">#C62828</color>
+    <color name="secondary">#C99735</color>
+    <color name="secondaryContainer">#F7E8C4</color>
+    <color name="onSecondary">#FFFFFF</color>
+    <color name="onSecondaryContainer">#49340E</color>
+
+    <!-- UI Colors -->
+    <color name="background">#F5F7FA</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="surfaceVariant">#EEF2F6</color>
+    <color name="onSurface">#17212B</color>
+    <color name="onSurfaceVariant">#66717E</color>
+
+    <color name="outline">#D5DCE3</color>
+    <color name="divider">#E5E9ED</color>
+
+    <!-- Semantic Colors -->
+    <color name="canastaRed">#D9363E</color>
+    <color name="canastaRedContainer">#FCE5E7</color>
+    <color name="canastaBlack">#292D32</color>
+    <color name="canastaBlackContainer">#E4E6E8</color>
+
+    <color name="positiveScore">#218344</color>
+    <color name="positiveContainer">#E0F3E6</color>
+    <color name="negativeScore">#C33B3B</color>
+    <color name="negativeContainer">#FBE4E4</color>
+
+    <color name="warning">#B7791F</color>
+    <color name="warningContainer">#FFF0CE</color>
+
+    <!-- Legacy Compatibility (if any references remain) -->
+    <color name="colorPrimary">@color/primary</color>
+    <color name="colorPrimaryDark">@color/primaryDark</color>
+    <color name="colorAccent">@color/secondary</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="textPrimary">@color/onSurface</color>
+    <color name="textSecondary">@color/onSurfaceVariant</color>
 </resources>

@@ -20,7 +20,7 @@ class MeldAdapter(
 
     fun getMelds(): List<MeldInput> = melds
 
-    inner class MeldViewHolder(val binding: ItemMeldBinding) : RecyclerView.ViewHolder(binding.root)
+    class MeldViewHolder(val binding: ItemMeldBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MeldViewHolder {
         val binding = ItemMeldBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -56,7 +56,7 @@ class MeldAdapter(
         binding.btnDeleteMeld.setOnClickListener { onMeldDeleted(holder.adapterPosition) }
 
         binding.actvRank.setOnItemClickListener { _, _, index, _ ->
-            melds[holder.adapterPosition] = melds[holder.adapterPosition].copy(rank = CardRank.values()[index])
+            melds[holder.adapterPosition] = melds[holder.adapterPosition].copy(rank = CardRank.entries[index])
             onMeldChanged()
         }
 
