@@ -5,10 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
-import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import com.mohammdalloush.kanastascore.MainActivity
 import com.mohammdalloush.kanastascore.R
@@ -30,25 +27,17 @@ class HistoryFragment : Fragment() {
         val mainActivity = activity as MainActivity
         val viewModel = mainActivity.viewModel
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.toolbar) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.updatePadding(top = systemBars.top)
-            insets
-        }
+        val match = viewModel.getActiveMatch() ?: return
+        val state = match.gameState
 
-        setupToolbar(mainActivity)
-
-        val state = viewModel.gameState.value
-        if (state != null) {
-            binding.tvTeam1Name.text = state.teams[0].name
-            binding.tvTeam1Total.text = viewModel.getCumulativeScore(0).toString()
-            binding.tvTeam2Name.text = state.teams[1].name
-            binding.tvTeam2Total.text = viewModel.getCumulativeScore(1).toString()
-            binding.emptyState.isVisible = state.rounds.isEmpty()
-        }
+        binding.tvTeam1Name.text = state.teams[0].name
+        binding.tvTeam1Total.text = viewModel.getCumulativeScore(0).toString()
+        binding.tvTeam2Name.text = state.teams[1].name
+        binding.tvTeam2Total.text = viewModel.getCumulativeScore(1).toString()
+        binding.emptyState.isVisible = state.rounds.isEmpty()
 
         val adapter = HistoryAdapter(
-            viewModel.gameState.value?.rounds ?: emptyList(),
+            state.rounds,
             onEdit = { round ->
                 viewModel.editingRoundId.value = round.id
                 viewModel.updateTeam1Input(round.team1Input)
@@ -60,7 +49,8 @@ class HistoryFragment : Fragment() {
                     .setMessage(R.string.delete_round_confirm)
                     .setPositiveButton(R.string.yes) { _, _ ->
                         viewModel.deleteRound(round.id)
-                        val updatedRounds = viewModel.gameState.value?.rounds ?: emptyList()
+                        val updatedMatch = viewModel.getActiveMatch()
+                        val updatedRounds = updatedMatch?.gameState?.rounds ?: emptyList()
                         (binding.rvHistory.adapter as HistoryAdapter).updateData(updatedRounds)
                         binding.emptyState.isVisible = updatedRounds.isEmpty()
                         // Update summary
@@ -74,41 +64,8 @@ class HistoryFragment : Fragment() {
         binding.rvHistory.adapter = adapter
 
         binding.btnBackToRound.setOnClickListener {
-            mainActivity.onBackPressedDispatcher.onBackPressed()
+            mainActivity.replaceFragment(RoundInputFragment())
         }
-    }
-
-    private fun setupToolbar(activity: MainActivity) {
-        binding.toolbar.setNavigationOnClickListener {
-            activity.onBackPressedDispatcher.onBackPressed()
-        }
-        binding.toolbar.inflateMenu(R.menu.menu_history)
-        binding.toolbar.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.action_new_match -> {
-                    showNewMatchDialog()
-                    true
-                }
-                R.id.action_theme -> {
-                    (activity as MainActivity).showThemeSelectionDialog()
-                    true
-                }
-                else -> false
-            }
-        }
-    }
-
-    private fun showNewMatchDialog() {
-        AlertDialog.Builder(requireContext())
-            .setTitle(R.string.confirm_new_match_title)
-            .setMessage(R.string.confirm_new_match_message)
-            .setPositiveButton(R.string.yes) { _, _ ->
-                val activity = activity as MainActivity
-                activity.viewModel.startNewMatch()
-                activity.replaceFragment(MatchSetupFragment())
-            }
-            .setNegativeButton(R.string.no, null)
-            .show()
     }
 
     override fun onDestroyView() {

@@ -23,6 +23,31 @@ enum class AppThemeMode {
     SYSTEM, LIGHT, DARK
 }
 
+enum class MatchStatus {
+    ACTIVE, COMPLETED
+}
+
+data class RoundDraft(
+    val team1Input: TeamRoundInput = TeamRoundInput(),
+    val team2Input: TeamRoundInput = TeamRoundInput()
+)
+
+data class SavedMatch(
+    val id: String = UUID.randomUUID().toString(),
+    val matchName: String,
+    val gameState: GameState,
+    val status: MatchStatus = MatchStatus.ACTIVE,
+    val createdAt: Long = System.currentTimeMillis(),
+    val updatedAt: Long = System.currentTimeMillis(),
+    val draft: RoundDraft = RoundDraft()
+)
+
+data class MatchesStore(
+    val matches: List<SavedMatch> = emptyList(),
+    val activeMatchId: String? = null,
+    val schemaVersion: Int = 3
+)
+
 data class MeldInput(
     val id: String = UUID.randomUUID().toString(),
     val rank: CardRank,

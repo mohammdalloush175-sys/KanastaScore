@@ -1,6 +1,8 @@
 package com.mohammdalloush.kanastascore
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -8,11 +10,13 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import com.mohammdalloush.kanastascore.databinding.ActivityMainBinding
 import com.mohammdalloush.kanastascore.engine.AppThemeMode
 import com.mohammdalloush.kanastascore.ui.HistoryFragment
 import com.mohammdalloush.kanastascore.ui.MatchSetupFragment
+import com.mohammdalloush.kanastascore.ui.MatchesFragment
 import com.mohammdalloush.kanastascore.ui.ResultFragment
 import com.mohammdalloush.kanastascore.ui.RoundInputFragment
 import com.mohammdalloush.kanastascore.utils.StorageHelper
@@ -29,25 +33,21 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setSupportActionBar(binding.toolbar)
+
         val savedTheme = StorageHelper.loadThemeMode(this)
         applyTheme(savedTheme)
         viewModel.setAppThemeMode(savedTheme)
 
-        val savedGame = StorageHelper.loadGameState(this)
-        viewModel.setGameState(savedGame)
+        val store = StorageHelper.loadMatchesStore(this)
+        viewModel.setMatchesStore(store)
 
         if (savedInstanceState == null) {
-            if (savedGame == null) {
-                replaceFragment(MatchSetupFragment())
-            } else {
-                replaceFragment(RoundInputFragment())
-            }
+            replaceFragment(MatchesFragment())
         }
 
-        viewModel.gameState.observe(this) { state ->
-            if (state != null) {
-                StorageHelper.saveGameState(this, state)
-            }
+        viewModel.matchesStore.observe(this) { store ->
+            StorageHelper.saveMatchesStore(this, store)
         }
 
         viewModel.appThemeMode.observe(this) { mode ->
@@ -55,26 +55,53 @@ class MainActivity : AppCompatActivity() {
             applyTheme(mode)
         }
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.appBar) { v, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(0, 0, 0, bars.bottom)
+            val cutouts = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
+            v.updatePadding(top = Math.max(bars.top, cutouts.top))
+            insets
+        }
+        
+        ViewCompat.setOnApplyWindowInsetsListener(binding.fragmentContainer) { v, insets ->
+            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.updatePadding(bottom = bars.bottom)
             insets
         }
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
-                if (fragment is MatchSetupFragment && viewModel.gameState.value != null) {
-                    replaceFragment(RoundInputFragment())
-                } else if (supportFragmentManager.backStackEntryCount > 0) {
-                    supportFragmentManager.popBackStack()
-                } else {
-                    isEnabled = false
-                    onBackPressedDispatcher.onBackPressed()
-                    isEnabled = true
+                when (fragment) {
+                    is RoundInputFragment, is MatchSetupFragment, is HistoryFragment -> {
+                        viewModel.saveCurrentDraft()
+                        replaceFragment(MatchesFragment())
+                    }
+                    is ResultFragment -> {
+                        // If round recorded, go home. If not, go back to input.
+                        // For simplicity, let's go to round input.
+                        replaceFragment(RoundInputFragment())
+                    }
+                    is MatchesFragment -> {
+                        isEnabled = false
+                        onBackPressedDispatcher.onBackPressed()
+                        isEnabled = true
+                    }
+                    else -> {
+                        if (supportFragmentManager.backStackEntryCount > 0) {
+                            supportFragmentManager.popBackStack()
+                        } else {
+                            isEnabled = false
+                            onBackPressedDispatcher.onBackPressed()
+                            isEnabled = true
+                        }
+                    }
                 }
             }
         })
+
+        supportFragmentManager.addOnBackStackChangedListener {
+            updateToolbar()
+        }
     }
 
     private fun applyTheme(mode: AppThemeMode) {
@@ -93,6 +120,56 @@ class MainActivity : AppCompatActivity() {
             transaction.addToBackStack(null)
         }
         transaction.commit()
+        // Wait for commit to update toolbar
+        binding.root.post { updateToolbar() }
+    }
+
+    private fun updateToolbar() {
+        val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
+        title = when (fragment) {
+            is MatchesFragment -> getString(R.string.matches_title)
+            is MatchSetupFragment -> getString(R.string.new_match)
+            is RoundInputFragment -> {
+                val match = viewModel.getActiveMatch()
+                val nextRound = (match?.gameState?.rounds?.maxByOrNull { it.roundNumber }?.roundNumber ?: 0) + 1
+                getString(R.string.round_number_label, nextRound)
+            }
+            is ResultFragment -> getString(R.string.result_title_simple)
+            is HistoryFragment -> getString(R.string.history_title)
+            else -> getString(R.string.app_name)
+        }
+        
+        supportActionBar?.setDisplayHomeAsUpEnabled(fragment !is MatchesFragment)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressedDispatcher.onBackPressed()
+        return true
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
+        menu?.findItem(R.id.action_new_match)?.isVisible = fragment !is MatchSetupFragment
+        return super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_theme -> {
+                showThemeSelectionDialog()
+                true
+            }
+            R.id.action_new_match -> {
+                replaceFragment(MatchSetupFragment())
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     fun showThemeSelectionDialog() {

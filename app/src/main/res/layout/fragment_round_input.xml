@@ -7,16 +7,6 @@
     android:layout_height="match_parent"
     android:background="@color/background">
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/background"
-        app:titleCentered="true"
-        app:titleTextAppearance="@style/TextAppearance.KanastaScore.Title"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:title="الجولة 1"/>
-
     <!-- Round Summary Card -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/summary_card"
@@ -25,7 +15,7 @@
         android:layout_marginHorizontal="@dimen/spacing_12"
         android:layout_marginVertical="@dimen/spacing_8"
         app:cardBackgroundColor="@color/surfaceVariant"
-        app:layout_constraintTop_toBottomOf="@id/toolbar">
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -48,6 +38,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textStyle="bold"
+                        android:maxLines="1"
+                        android:ellipsize="end"
                         android:textColor="@color/primary"
                         tools:text="الفريق 1: 1200"/>
                     <TextView
@@ -76,6 +68,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textStyle="bold"
+                        android:maxLines="1"
+                        android:ellipsize="end"
                         android:textColor="@color/secondary"
                         tools:text="الفريق 2: 850"/>
                     <TextView

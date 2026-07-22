@@ -46,7 +46,7 @@ class HistoryAdapter(
             cum1 += rounds[i].team1Result.total
             cum2 += rounds[i].team2Result.total
         }
-        binding.tvTeam1Cumulative.text = context.getString(R.string.previous_total, cum1) // Reuse string
+        binding.tvTeam1Cumulative.text = context.getString(R.string.previous_total, cum1)
         binding.tvTeam2Cumulative.text = context.getString(R.string.previous_total, cum2)
 
         binding.root.setOnClickListener { onEdit(round) }

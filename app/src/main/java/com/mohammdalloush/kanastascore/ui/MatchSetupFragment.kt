@@ -7,14 +7,10 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import com.mohammdalloush.kanastascore.MainActivity
 import com.mohammdalloush.kanastascore.R
 import com.mohammdalloush.kanastascore.databinding.FragmentMatchSetupBinding
-import com.mohammdalloush.kanastascore.engine.AppThemeMode
 import com.mohammdalloush.kanastascore.engine.Team
 
 class MatchSetupFragment : Fragment() {
@@ -30,12 +26,6 @@ class MatchSetupFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.contentLayout) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.updatePadding(top = systemBars.top)
-            insets
-        }
-
         val mainActivity = activity as MainActivity
         val viewModel = mainActivity.viewModel
         
@@ -44,29 +34,15 @@ class MatchSetupFragment : Fragment() {
         binding.actvTargetScore.setAdapter(adapter)
         binding.actvTargetScore.setText(targetScores[2], false) // Default 5000
 
-        if (viewModel.gameState.value != null) {
-            binding.btnContinue.visibility = View.VISIBLE
-            binding.btnContinue.setOnClickListener {
-                mainActivity.replaceFragment(RoundInputFragment())
-            }
-        }
-
         binding.btnStart.setOnClickListener {
-            if (viewModel.gameState.value != null) {
-                showConfirmNewGameDialog()
-            } else {
-                startNewGame()
-            }
-        }
-
-        binding.btnTheme.setOnClickListener {
-            (activity as MainActivity).showThemeSelectionDialog()
+            startNewGame()
         }
     }
 
     private fun startNewGame() {
         val t1Name = binding.etTeam1Name.text.toString().trim()
         val t2Name = binding.etTeam2Name.text.toString().trim()
+        val matchNameInput = binding.etMatchName.text.toString().trim()
 
         if (t1Name.isBlank()) {
             binding.etTeam1Name.error = getString(R.string.team_1_name)
@@ -82,25 +58,14 @@ class MatchSetupFragment : Fragment() {
         }
 
         val targetScore = binding.actvTargetScore.text.toString().toIntOrNull() ?: 5000
+        val matchName = matchNameInput.ifBlank { "$t1Name ضد $t2Name" }
 
         val team1 = Team(t1Name, emptyList())
         val team2 = Team(t2Name, emptyList())
 
-        (activity as MainActivity).viewModel.startNewGame(listOf(team1, team2), targetScore)
+        val viewModel = (activity as MainActivity).viewModel
+        viewModel.createNewMatch(matchName, listOf(team1, team2), targetScore)
         (activity as MainActivity).replaceFragment(RoundInputFragment())
-    }
-
-    private fun showConfirmNewGameDialog() {
-        AlertDialog.Builder(requireContext())
-            .setTitle(R.string.confirm_new_match_title)
-            .setMessage(R.string.confirm_new_match_message)
-            .setPositiveButton(R.string.yes) { _, _ -> 
-                binding.etTeam1Name.text?.clear()
-                binding.etTeam2Name.text?.clear()
-                startNewGame() 
-            }
-            .setNegativeButton(R.string.no, null)
-            .show()
     }
 
     override fun onDestroyView() {

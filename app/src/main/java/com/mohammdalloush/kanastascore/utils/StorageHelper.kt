@@ -2,46 +2,72 @@ package com.mohammdalloush.kanastascore.utils
 
 import android.content.Context
 import com.google.gson.Gson
-import com.mohammdalloush.kanastascore.engine.GameState
+import com.mohammdalloush.kanastascore.engine.*
 
 object StorageHelper {
     private const val PREFS_NAME = "canasta_score_preferences"
-    private const val KEY_GAME_STATE = "active_game_state"
+    private const val KEY_GAME_STATE_OLD = "active_game_state" // v2
+    private const val KEY_MATCHES_STORE = "matches_store_v3"
     private const val KEY_THEME_MODE = "app_theme_mode"
 
-    fun saveGameState(context: Context, state: GameState) {
+    fun saveMatchesStore(context: Context, store: MatchesStore) {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        val json = Gson().toJson(state)
-        prefs.edit().putString(KEY_GAME_STATE, json).apply()
+        val json = Gson().toJson(store)
+        prefs.edit().putString(KEY_MATCHES_STORE, json).apply()
     }
 
-    fun loadGameState(context: Context): GameState? {
+    fun loadMatchesStore(context: Context): MatchesStore {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        val json = prefs.getString(KEY_GAME_STATE, null) ?: return null
-        return try {
-            Gson().fromJson(json, GameState::class.java)
-        } catch (e: Exception) {
-            null
+        
+        // Check for v3 store
+        val json = prefs.getString(KEY_MATCHES_STORE, null)
+        if (json != null) {
+            return try {
+                Gson().fromJson(json, MatchesStore::class.java)
+            } catch (e: Exception) {
+                MatchesStore()
+            }
         }
+
+        // Migration from v2
+        val oldJson = prefs.getString(KEY_GAME_STATE_OLD, null)
+        if (oldJson != null) {
+            return try {
+                val oldState = Gson().fromJson(oldJson, GameState::class.java)
+                val matchName = if (oldState.teams.size >= 2) {
+                    "${oldState.teams[0].name} ضد ${oldState.teams[1].name}"
+                } else "مباراة سابقة"
+                
+                val migratedMatch = SavedMatch(
+                    matchName = matchName,
+                    gameState = oldState,
+                    updatedAt = System.currentTimeMillis()
+                )
+                val newStore = MatchesStore(matches = listOf(migratedMatch))
+                saveMatchesStore(context, newStore)
+                // Clear old key
+                prefs.edit().remove(KEY_GAME_STATE_OLD).apply()
+                newStore
+            } catch (e: Exception) {
+                MatchesStore()
+            }
+        }
+
+        return MatchesStore()
     }
 
-    fun clearGameState(context: Context) {
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        prefs.edit().remove(KEY_GAME_STATE).apply()
-    }
-
-    fun saveThemeMode(context: Context, mode: com.mohammdalloush.kanastascore.engine.AppThemeMode) {
+    fun saveThemeMode(context: Context, mode: AppThemeMode) {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         prefs.edit().putString(KEY_THEME_MODE, mode.name).apply()
     }
 
-    fun loadThemeMode(context: Context): com.mohammdalloush.kanastascore.engine.AppThemeMode {
+    fun loadThemeMode(context: Context): AppThemeMode {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        val name = prefs.getString(KEY_THEME_MODE, com.mohammdalloush.kanastascore.engine.AppThemeMode.SYSTEM.name)
+        val name = prefs.getString(KEY_THEME_MODE, AppThemeMode.SYSTEM.name)
         return try {
-            com.mohammdalloush.kanastascore.engine.AppThemeMode.valueOf(name!!)
+            AppThemeMode.valueOf(name!!)
         } catch (e: Exception) {
-            com.mohammdalloush.kanastascore.engine.AppThemeMode.SYSTEM
+            AppThemeMode.SYSTEM
         }
     }
 }

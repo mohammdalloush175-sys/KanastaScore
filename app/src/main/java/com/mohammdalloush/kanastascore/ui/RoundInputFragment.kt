@@ -8,11 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
-import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import com.mohammdalloush.kanastascore.MainActivity
 import com.mohammdalloush.kanastascore.R
@@ -37,24 +33,12 @@ class RoundInputFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        
-        ViewCompat.setOnApplyWindowInsetsListener(binding.toolbar) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.updatePadding(top = systemBars.top)
-            insets
-        }
-        ViewCompat.setOnApplyWindowInsetsListener(binding.bottomBar) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.updatePadding(bottom = systemBars.bottom)
-            insets
-        }
-
         val mainActivity = activity as MainActivity
         val viewModel = mainActivity.viewModel
 
-        val state = viewModel.gameState.value ?: return
+        val match = viewModel.getActiveMatch() ?: return
+        val state = match.gameState
 
-        setupToolbar(mainActivity)
         setupHeader(state, viewModel)
         setupTeamSection(binding.sectionTeam1, 0, state.teams[0])
         setupTeamSection(binding.sectionTeam2, 1, state.teams[1])
@@ -82,45 +66,7 @@ class RoundInputFragment : Fragment() {
         }
     }
 
-    private fun setupToolbar(activity: MainActivity) {
-        binding.toolbar.inflateMenu(R.menu.menu_round_input)
-        binding.toolbar.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.action_history -> {
-                    activity.replaceFragment(HistoryFragment(), true)
-                    true
-                }
-                R.id.action_new_match -> {
-                    showNewMatchDialog()
-                    true
-                }
-                R.id.action_theme -> {
-                    (activity as MainActivity).showThemeSelectionDialog()
-                    true
-                }
-                else -> false
-            }
-        }
-    }
-
-    private fun showNewMatchDialog() {
-        AlertDialog.Builder(requireContext())
-            .setTitle(R.string.confirm_new_match_title)
-            .setMessage(R.string.confirm_new_match_message)
-            .setPositiveButton(R.string.yes) { _, _ ->
-                val activity = activity as MainActivity
-                activity.viewModel.setGameState(null)
-                activity.viewModel.clearRoundDraft()
-                activity.replaceFragment(MatchSetupFragment())
-            }
-            .setNegativeButton(R.string.no, null)
-            .show()
-    }
-
     private fun setupHeader(state: GameState, viewModel: GameViewModel) {
-        val nextRoundNumber = (state.rounds.maxByOrNull { it.roundNumber }?.roundNumber ?: 0) + 1
-        binding.toolbar.title = getString(R.string.round_number_label, nextRoundNumber)
-        
         binding.tvTargetInfo.text = getString(R.string.target_score_info, state.targetScore)
 
         val t1Score = viewModel.getCumulativeScore(0)
@@ -151,6 +97,7 @@ class RoundInputFragment : Fragment() {
                 val newMode = if (checkedId == R.id.btn_mode_detailed) MeldScoringMode.DETAILED else MeldScoringMode.DIRECT_TOTAL
                 inputLiveData.value = inputLiveData.value?.copy(scoringMode = newMode)
                 updateModeVisibility(sectionBinding, newMode)
+                viewModel.saveCurrentDraft()
             }
         }
         updateModeVisibility(sectionBinding, initialInput.scoringMode)
@@ -163,6 +110,7 @@ class RoundInputFragment : Fragment() {
                 val newMelds = if (teamIndex == 0) team1Adapter.getMelds() else team2Adapter.getMelds()
                 inputLiveData.value = current.copy(melds = newMelds)
                 updateMeldTotal(sectionBinding, inputLiveData.value!!)
+                viewModel.saveCurrentDraft()
             },
             onMeldDeleted = { pos ->
                 val current = inputLiveData.value!!
@@ -170,6 +118,7 @@ class RoundInputFragment : Fragment() {
                 inputLiveData.value = current.copy(melds = newMelds)
                 if (teamIndex == 0) team1Adapter.updateData(newMelds) else team2Adapter.updateData(newMelds)
                 updateMeldTotal(sectionBinding, inputLiveData.value!!)
+                viewModel.saveCurrentDraft()
             }
         )
         if (teamIndex == 0) team1Adapter = adapter else team2Adapter = adapter
@@ -184,6 +133,7 @@ class RoundInputFragment : Fragment() {
             inputLiveData.value = current.copy(melds = newMelds)
             adapter.updateData(newMelds)
             sectionBinding.tvNoMelds.isVisible = false
+            viewModel.saveCurrentDraft()
         }
 
         // Direct Mode
@@ -192,18 +142,21 @@ class RoundInputFragment : Fragment() {
             val current = inputLiveData.value!!
             inputLiveData.value = current.copy(directInput = current.directInput.copy(totalMeldPoints = it.toIntOrNull() ?: 0))
             updateMeldTotal(sectionBinding, inputLiveData.value!!)
+            viewModel.saveCurrentDraft()
         }
         sectionBinding.etRedCanastas.setText(initialInput.directInput.redCanastasCount.toString())
         setupTextWatcher(sectionBinding.etRedCanastas) {
             val current = inputLiveData.value!!
             inputLiveData.value = current.copy(directInput = current.directInput.copy(redCanastasCount = it.toIntOrNull() ?: 0))
             updateMeldTotal(sectionBinding, inputLiveData.value!!)
+            viewModel.saveCurrentDraft()
         }
         sectionBinding.etBlackCanastas.setText(initialInput.directInput.blackCanastasCount.toString())
         setupTextWatcher(sectionBinding.etBlackCanastas) {
             val current = inputLiveData.value!!
             inputLiveData.value = current.copy(directInput = current.directInput.copy(blackCanastasCount = it.toIntOrNull() ?: 0))
             updateMeldTotal(sectionBinding, inputLiveData.value!!)
+            viewModel.saveCurrentDraft()
         }
 
         // Red Threes
@@ -229,6 +182,7 @@ class RoundInputFragment : Fragment() {
         sectionBinding.etRemainingPoints.setText(initialInput.remainingPoints.toString())
         setupTextWatcher(sectionBinding.etRemainingPoints) {
             inputLiveData.value = inputLiveData.value!!.copy(remainingPoints = it.toIntOrNull() ?: 0)
+            viewModel.saveCurrentDraft()
         }
 
         updateMeldTotal(sectionBinding, initialInput)
@@ -246,7 +200,7 @@ class RoundInputFragment : Fragment() {
         
         if (otherInput?.exited == true) {
             sectionBinding.switchExited.isEnabled = false
-            val otherTeamName = (activity as MainActivity).viewModel.gameState.value?.teams?.get(if (teamIndex == 0) 1 else 0)?.name ?: ""
+            val otherTeamName = (activity as MainActivity).viewModel.getActiveMatch()?.gameState?.teams?.get(if (teamIndex == 0) 1 else 0)?.name ?: ""
             sectionBinding.tvExitedHint.isVisible = true
             sectionBinding.tvExitedHint.text = getString(R.string.team_exited_hint, otherTeamName)
         } else {
@@ -269,7 +223,6 @@ class RoundInputFragment : Fragment() {
         }
         sectionBinding.tvMeldTotal.text = getString(R.string.total_meld_points, total)
         
-        // Show warning in direct mode if no canasta
         if (input.scoringMode == MeldScoringMode.DIRECT_TOTAL) {
             val hasCanasta = (input.directInput.redCanastasCount + input.directInput.blackCanastasCount) > 0
             sectionBinding.tvDirectModeWarning.isVisible = !hasCanasta
