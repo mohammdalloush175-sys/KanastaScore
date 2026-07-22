@@ -108,14 +108,34 @@
                         style="@style/TextAppearance.KanastaScore.SectionTitle"
                         tools:text="الفريق 1"/>
 
-                    <TextView
-                        android:id="@+id/tv_team1_result_details"
+                    <!-- Warning for no canasta -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/card_team1_warning"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/spacing_12"
-                        android:lineSpacingExtra="6dp"
-                        android:textColor="@color/onSurfaceVariant"
-                        tools:text="تفاصيل النقاط..."/>
+                        app:cardBackgroundColor="@color/negativeContainer"
+                        app:cardCornerRadius="@dimen/spacing_8"
+                        app:strokeWidth="0dp"
+                        android:visibility="gone"
+                        tools:visibility="visible">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/spacing_8"
+                            android:text="@string/no_canasta_registered"
+                            android:textColor="@color/negativeScore"
+                            android:textSize="@dimen/text_12"
+                            android:textStyle="bold"
+                            android:gravity="center"/>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <LinearLayout
+                        android:id="@+id/container_team1_details"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_12"
+                        android:orientation="vertical"/>
 
                     <View
                         android:layout_width="match_parent"
@@ -153,14 +173,34 @@
                         android:textColor="@color/secondary"
                         tools:text="الفريق 2"/>
 
-                    <TextView
-                        android:id="@+id/tv_team2_result_details"
+                    <!-- Warning for no canasta -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/card_team2_warning"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/spacing_12"
-                        android:lineSpacingExtra="6dp"
-                        android:textColor="@color/onSurfaceVariant"
-                        tools:text="تفاصيل النقاط..."/>
+                        app:cardBackgroundColor="@color/negativeContainer"
+                        app:cardCornerRadius="@dimen/spacing_8"
+                        app:strokeWidth="0dp"
+                        android:visibility="gone"
+                        tools:visibility="visible">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/spacing_8"
+                            android:text="@string/no_canasta_registered"
+                            android:textColor="@color/negativeScore"
+                            android:textSize="@dimen/text_12"
+                            android:textStyle="bold"
+                            android:gravity="center"/>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <LinearLayout
+                        android:id="@+id/container_team2_details"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_12"
+                        android:orientation="vertical"/>
 
                     <View
                         android:layout_width="match_parent"

@@ -79,9 +79,94 @@
     <string name="result_title">نتيجة الجولة %1$d</string>
     <string name="record_round">تسجيل الجولة</string>
     <string name="edit_round">عودة للتعديل</string>
+    <string name="preview_title">مراجعة النتيجة</string>
+    <string name="no_canasta_registered">لا توجد كنستا مسجلة لهذا الفريق.</string>
+    <string name="no_canasta_penalty_label">العقوبة الثابتة (لا كنستا)</string>
+    <string name="red_threes_penalty_label">عقوبة الثلاثات الحمراء</string>
+    <string name="meld_points_detail">مجموع نقاط الأبواب</string>
+    <string name="red_canasta_count_label">عدد الكنستات الحمراء</string>
+    <string name="red_canasta_bonus_label">مكافأة الكنستات الحمراء</string>
+    <string name="black_canasta_count_label">عدد الكنستات السوداء</string>
+    <string name="black_canasta_bonus_label">مكافأة الكنستات السوداء</string>
+    <string name="red_threes_count_label">عدد الثلاثات الحمراء</string>
+    <string name="red_threes_bonus_label">مكافأة الثلاثات الحمراء</string>
+    <string name="exit_bonus_label">مكافأة إنهاء الجولة</string>
+    <string name="burning_penalty_label">الحرق (أوراق اليد)</string>
+    <string name="round_total_label">نتيجة الجولة</string>
+    <string name="undo_label">تراجع</string>
+    <string name="round_recorded_msg">تم تسجيل الجولة %1$d</string>
+    <string name="no_meld_points_calc">لم يتم احتساب نقاط الأبواب.</string>
+    <string name="no_burning_calc">لم يتم احتساب الحرق.</string>
+    <string name="review_data_title">مراجعة البيانات</string>
+    <string name="continue_preview">متابعة المعاينة</string>
+    <string name="confirm_clear">تأكيد المسح</string>
+    <string name="confirm_clear_meld_msg">هل أنت متأكد من مسح مجموع النقاط؟</string>
+    <string name="confirm_clear_burn_msg">هل أنت متأكد من مسح نقاط الحرق؟</string>
     <string name="previous_total">المجموع السابق: %1$d</string>
     <string name="new_total">المجموع الجديد: %1$d</string>
     <string name="winner_is">الفائز هو: %1$s!</string>
+    <string name="match_ended_title">انتهت المباراة</string>
+    <string name="rematch_same_teams">إعادة بنفس الفريقين</string>
+    <string name="share_result">مشاركة النتيجة</string>
+    <string name="rounds_count_label">عدد الجولات: %1$d</string>
+    <string name="max_round_score_label">أعلى نتيجة في جولة: %1$d</string>
+    <string name="total_canastas_label">إجمالي الكنستات: %1$d (ح) / %2$d (س)</string>
+    <string name="back_to_matches">العودة إلى المباريات</string>
+    <string name="settings_title">الإعدادات</string>
+    <string name="appearance_section">المظهر</string>
+    <string name="data_section">البيانات</string>
+    <string name="backup_export">تصدير نسخة احتياطية</string>
+    <string name="backup_import">استيراد نسخة احتياطية</string>
+    <string name="delete_all_data">حذف جميع البيانات</string>
+    <string name="confirm_delete_all_msg">هل أنت متأكد من حذف جميع المباريات؟ لا يمكن التراجع عن هذا الإجراء.</string>
+    <string name="stats_and_rules_section">الإحصائيات والقواعد</string>
+    <string name="rules_label">قواعد الحساب</string>
+    <string name="statistics_label">الإحصائيات</string>
+    <string name="no_stats_available">لا توجد بيانات كافية لعرض الإحصائيات</string>
+    <string name="stat_total_matches">إجمالي المباريات: %1$d</string>
+    <string name="stat_total_rounds">إجمالي الجولات: %1$d</string>
+    <string name="stat_max_round_score">أعلى نتيجة جولة: %1$d</string>
+    <string name="stat_avg_round_score">متوسط نقاط الجولة: %1$.1f</string>
+    <string name="stat_total_canastas">إجمالي الكنستات: %1$d (ح) / %2$d (س)</string>
+    <string name="stat_team_win_rate">مرات الفوز: %1$d (%2$.1f%%)</string>
+    <string name="stat_team_avg">متوسط: %1$.1f</string>
+    <string name="about_label">حول التطبيق</string>
+    <string name="app_version">الإصدار %1$s</string>
+    <string name="merge_data">دمج مع البيانات الحالية</string>
+    <string name="replace_data">استبدال البيانات الحالية</string>
+    <string name="import_summary">تم العثور على %1$d مباراة. ماذا تريد أن تفعل؟</string>
+    <string name="import_success">تم استيراد البيانات بنجاح</string>
+    <string name="import_failed">فشل استيراد الملف. تأكد من أنه ملف نسخة احتياطية صالح.</string>
+    <string name="export_success">تم تصدير النسخة الاحتياطية</string>
+    <string name="rules_title">قواعد احتساب النقاط</string>
+    <string name="rules_footer">يعتمد التطبيق هذه القواعد عند حساب النتائج.</string>
+    <string name="rules_text">1. الكنستا الحمراء = 300\n
+2. الكنستا السوداء = 200\n
+3. إنهاء الجولة (الفتوح) = 100\n
+4. الثلاثات الحمراء:\n
+  - 1 = 100\n
+  - 2 = 200\n
+  - 3 = 300\n
+  - 4 = 800\n
+5. عند عدم وجود كنستا:\n
+  - عقوبة ثابتة = -300\n
+  - الثلاثات الحمراء تتحول إلى عقوبة (سالب)\n
+  - لا تحتسب نقاط الأبواب ولا الحرق\n
+6. مجموع الثلاثات الحمراء للفريقين يساوي دائماً 4\n
+7. فريق واحد فقط يمكنه إنهاء الجولة\n
+8. لا يسمح بإنهاء الجولة دون وجود كنستا\n\n
+مثال 1 (مع كنستا):\n
+نقاط الأبواب = 420\n
+كنستا حمراء = 300\n
+4 ثلاثات حمراء = 800\n
+فتوح = 100\n
+حرق = -75\n
+النتيجة = 1545\n\n
+مثال 2 (بدون كنستا):\n
+ثلاثتان حمراوان = -200\n
+عقوبة لا كنستا = -300\n
+النتيجة = -500</string>
+    <string name="rematch_prefix">إعادة: %1$s</string>
 
     <!-- History -->
     <string name="history_title">سجل الجولات</string>

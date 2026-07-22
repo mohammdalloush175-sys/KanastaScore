@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_24"
+            android:gravity="center_horizontal">
+
+            <ImageView
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:src="@android:drawable/btn_star_big_on"
+                app:tint="@color/secondary"
+                android:layout_marginBottom="@dimen/spacing_16"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/match_ended_title"
+                style="@style/TextAppearance.Material3.HeadlineMedium"
+                android:textStyle="bold"
+                android:textColor="@color/onSurface"/>
+
+            <TextView
+                android:id="@+id/tv_match_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_8"
+                android:alpha="0.7"
+                tools:text="جلسة الخميس"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_32"
+                app:cardBackgroundColor="@color/primary"
+                app:cardCornerRadius="@dimen/card_corner_radius">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/spacing_20"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="الفائز"
+                        android:textColor="@color/onPrimary"
+                        android:alpha="0.8"
+                        android:textSize="@dimen/text_14"/>
+
+                    <TextView
+                        android:id="@+id/tv_winner_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/onPrimary"
+                        android:textSize="@dimen/text_huge"
+                        android:textStyle="bold"
+                        tools:text="الفريق الأول"/>
+
+                    <View
+                        android:layout_width="100dp"
+                        android:layout_height="1dp"
+                        android:background="@color/onPrimary"
+                        android:alpha="0.3"
+                        android:layout_marginVertical="@dimen/spacing_12"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:baselineAligned="false">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:gravity="center">
+                            <TextView
+                                android:id="@+id/tv_team1_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/onPrimary"
+                                android:alpha="0.7"
+                                tools:text="فريق أ"/>
+                            <TextView
+                                android:id="@+id/tv_team1_total"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/onPrimary"
+                                android:textSize="@dimen/text_24"
+                                android:textStyle="bold"
+                                tools:text="5040"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:gravity="center">
+                            <TextView
+                                android:id="@+id/tv_team2_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/onPrimary"
+                                android:alpha="0.7"
+                                tools:text="فريق ب"/>
+                            <TextView
+                                android:id="@+id/tv_team2_total"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/onPrimary"
+                                android:textSize="@dimen/text_24"
+                                android:textStyle="bold"
+                                tools:text="4210"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_16"
+                app:cardCornerRadius="@dimen/card_corner_radius"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/outline">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/spacing_16">
+
+                    <TextView
+                        android:id="@+id/tv_match_stats"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:lineSpacingExtra="8dp"
+                        android:textColor="@color/onSurfaceVariant"
+                        tools:text="إحصائيات المباراة..."/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/tv_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_16"
+                android:alpha="0.5"
+                android:textSize="@dimen/text_12"
+                tools:text="23/07/2026"/>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/spacing_16"
+        android:background="@color/surface"
+        android:elevation="@dimen/header_elevation">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_rematch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/rematch_same_teams"
+            android:layout_marginBottom="@dimen/spacing_8"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_share"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/share_result"
+                android:layout_marginEnd="@dimen/spacing_8"
+                app:icon="@android:drawable/ic_menu_share"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_history"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/view_history"
+                app:icon="@android:drawable/ic_menu_recent_history"/>
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_back_matches"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/back_to_matches"
+            android:layout_marginTop="@dimen/spacing_8"/>
+    </LinearLayout>
+</LinearLayout>

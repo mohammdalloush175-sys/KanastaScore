@@ -35,7 +35,7 @@ class MatchesFragment : Fragment() {
                 if (match.status == MatchStatus.ACTIVE) {
                     mainActivity.replaceFragment(RoundInputFragment())
                 } else {
-                    mainActivity.replaceFragment(HistoryFragment())
+                    mainActivity.replaceFragment(MatchEndFragment())
                 }
             },
             onDelete = { match ->
@@ -47,15 +47,31 @@ class MatchesFragment : Fragment() {
                     }
                     .setNegativeButton(R.string.no, null)
                     .show()
+            },
+            onShare = { match ->
+                com.mohammdalloush.kanastascore.utils.ShareHelper.shareMatchResult(requireContext(), match)
             }
         )
         binding.rvMatches.adapter = adapter
 
         viewModel.matchesStore.observe(viewLifecycleOwner) { store ->
-            val matches = store.matches
+            val matches = store.matches.sortedWith(compareBy<com.mohammdalloush.kanastascore.engine.SavedMatch> { it.status != MatchStatus.ACTIVE }.thenByDescending { it.updatedAt })
             adapter.updateData(matches)
             binding.emptyState.isVisible = matches.isEmpty()
             binding.rvMatches.isVisible = matches.isNotEmpty()
+            binding.headerMatches.isVisible = matches.isNotEmpty()
+        }
+
+        binding.btnNewMatch.setOnClickListener {
+            mainActivity.replaceFragment(MatchSetupFragment(), true)
+        }
+
+        binding.btnStats.setOnClickListener {
+            mainActivity.replaceFragment(StatisticsFragment(), true)
+        }
+
+        binding.btnSettings.setOnClickListener {
+            mainActivity.replaceFragment(SettingsFragment(), true)
         }
 
         binding.btnStartFirst.setOnClickListener {

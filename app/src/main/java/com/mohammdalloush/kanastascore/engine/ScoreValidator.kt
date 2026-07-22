@@ -88,4 +88,36 @@ object ScoreValidator {
 
         return null
     }
+
+    fun getWarnings(team1: TeamRoundInput, team2: TeamRoundInput): List<String> {
+        val warnings = mutableListOf<String>()
+        
+        fun checkTeam(input: TeamRoundInput, teamName: String) {
+            if (input.directInput.totalMeldPoints > 2000) {
+                warnings.add("$teamName: مجموع نقاط الأبواب مرتفع جداً (${input.directInput.totalMeldPoints})")
+            }
+            if (input.remainingPoints > 1000) {
+                warnings.add("$teamName: نقاط الحرق مرتفعة جداً (${input.remainingPoints})")
+            }
+            if (input.directInput.redCanastasCount + input.directInput.blackCanastasCount > 6) {
+                warnings.add("$teamName: عدد الكنستات مرتفع بصورة غير معتادة")
+            }
+            val hasCanasta = (input.directInput.redCanastasCount + input.directInput.blackCanastasCount) > 0
+            if (input.directInput.totalMeldPoints > 0 && !hasCanasta) {
+                warnings.add("$teamName: الفريق لديه نقاط أبواب لكن لا يملك أي كنستا (سيتم تطبيق العقوبة)")
+            }
+        }
+
+        checkTeam(team1, "الفريق 1")
+        checkTeam(team2, "الفريق 2")
+        
+        val res1 = ScoreCalculator.calculateScore(team1)
+        val res2 = ScoreCalculator.calculateScore(team2)
+        
+        if (res1.total < -1000) warnings.add("الفريق 1: نتيجة الجولة سالبة جداً (${res1.total})")
+        if (res2.total < -1000) warnings.add("الفريق 2: نتيجة الجولة سالبة جداً (${res2.total})")
+        if (res1.total < 0 && res2.total < 0) warnings.add("كلا الفريقين نتيجتهما سالبة في هذه الجولة")
+
+        return warnings
+    }
 }

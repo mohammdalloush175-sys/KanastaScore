@@ -12,122 +12,173 @@
         android:layout_height="wrap_content"
         style="@style/TextAppearance.KanastaScore.SectionTitle"
         android:layout_marginStart="@dimen/spacing_4"
-        android:layout_marginBottom="@dimen/spacing_12"
+        android:layout_marginBottom="@dimen/spacing_16"
+        android:textColor="@color/primary"
         tools:text="اسم الفريق"/>
 
-    <com.google.android.material.button.MaterialButtonToggleGroup
-        android:id="@+id/toggle_scoring_mode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/spacing_16"
-        app:singleSelection="true"
-        app:checkedButton="@+id/btn_mode_detailed">
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_mode_detailed"
-            style="@style/Widget.Material3.Button.OutlinedButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/scoring_mode_detailed"
-            android:textSize="@dimen/text_12"/>
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_mode_direct"
-            style="@style/Widget.Material3.Button.OutlinedButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/scoring_mode_direct"
-            android:textSize="@dimen/text_12"/>
-    </com.google.android.material.button.MaterialButtonToggleGroup>
-
-    <!-- Detailed Mode View -->
-    <LinearLayout
-        android:id="@+id/layout_detailed_mode"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_melds"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_meld"/>
-
-        <TextView
-            android:id="@+id/tv_no_melds"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="@dimen/spacing_24"
-            android:text="@string/no_melds_added"
-            android:textColor="@color/onSurfaceVariant"
-            android:visibility="gone"/>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_add_meld"
-            style="@style/Widget.KanastaScore.Button.Tonal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/add_meld"
-            app:icon="@android:drawable/ic_input_add"
-            android:layout_marginTop="@dimen/spacing_8"/>
-    </LinearLayout>
-
-    <!-- Direct Mode View -->
+    <!-- Main Card containing all inputs -->
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/layout_direct_mode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:cardBackgroundColor="@color/surfaceVariant">
+        app:cardCornerRadius="@dimen/card_corner_radius"
+        app:cardElevation="0dp"
+        app:strokeWidth="@dimen/card_stroke_width"
+        app:strokeColor="@color/outline"
+        app:cardBackgroundColor="@color/surface">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="@dimen/spacing_16">
+            android:padding="@dimen/spacing_20">
 
+            <!-- Meld Points Section -->
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/direct_meld_total"
-                android:layout_marginBottom="@dimen/spacing_16">
+                android:layout_marginBottom="@dimen/spacing_4">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_direct_total"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number"/>
+                    android:inputType="number"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/text_18"/>
             </com.google.android.material.textfield.TextInputLayout>
 
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                android:layout_marginBottom="@dimen/spacing_16">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_meld_plus_50"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="+50"
+                        android:layout_marginEnd="@dimen/spacing_4"
+                        android:minWidth="60dp"
+                        app:paddingStart="4dp"
+                        app:paddingEnd="4dp"/>
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_meld_plus_100"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="+100"
+                        android:layout_marginEnd="@dimen/spacing_4"
+                        android:minWidth="60dp"
+                        app:paddingStart="4dp"
+                        app:paddingEnd="4dp"/>
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_meld_plus_200"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="+200"
+                        android:layout_marginEnd="@dimen/spacing_4"
+                        android:minWidth="60dp"
+                        app:paddingStart="4dp"
+                        app:paddingEnd="4dp"/>
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_meld_clear"
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="مسح"
+                        android:textColor="@color/negativeScore"/>
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <!-- Canastas Section -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:baselineAligned="false">
-                <com.google.android.material.textfield.TextInputLayout
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="@string/red_canastas_count"
+                    android:orientation="vertical"
                     android:layout_marginEnd="@dimen/spacing_8">
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/et_red_canastas"
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="number"/>
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:hint="@string/red_canastas_count"
+                        app:boxStrokeColor="@color/canastaRed">
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/et_red_canastas"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="number"
+                            android:textColor="@color/canastaRed"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_red_minus"
+                            style="@style/Widget.Material3.Button.IconButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:icon="@drawable/ic_minus"/>
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_red_plus"
+                            style="@style/Widget.Material3.Button.IconButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:icon="@drawable/ic_plus"/>
+                    </LinearLayout>
+                </LinearLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="@string/black_canastas_count">
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/et_black_canastas"
+                    android:orientation="vertical">
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="number"/>
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:hint="@string/black_canastas_count"
+                        app:boxStrokeColor="@color/canastaBlack">
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/et_black_canastas"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="number"
+                            android:textColor="@color/canastaBlack"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_black_minus"
+                            style="@style/Widget.Material3.Button.IconButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:icon="@drawable/ic_minus"/>
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_black_plus"
+                            style="@style/Widget.Material3.Button.IconButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:icon="@drawable/ic_plus"/>
+                    </LinearLayout>
+                </LinearLayout>
             </LinearLayout>
 
             <TextView
@@ -139,21 +190,15 @@
                 android:textColor="@color/negativeScore"
                 android:textSize="@dimen/text_12"
                 android:visibility="gone"/>
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
 
-    <!-- Extras Section -->
-    <com.google.android.material.card.MaterialCardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_16">
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/spacing_12"
+                app:dividerColor="@color/divider"
+                app:dividerThickness="1dp"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="@dimen/spacing_16">
-
+            <!-- Extra Info Section (Threes, Exit, Penalty) -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -164,32 +209,82 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/red_threes"
-                    android:textStyle="bold"/>
+                    style="@style/TextAppearance.Material3.LabelLarge"
+                    android:textColor="@color/onSurface"/>
+
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                    android:id="@+id/toggle_group_threes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:singleSelection="true"
+                    app:selectionRequired="true">
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_threes_0"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="40dp"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:padding="0dp"
+                        android:insetBottom="0dp"
+                        android:insetTop="0dp"/>
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_threes_1"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="40dp"
+                        android:layout_height="wrap_content"
+                        android:text="1"
+                        android:padding="0dp"
+                        android:insetBottom="0dp"
+                        android:insetTop="0dp"/>
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_threes_2"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="40dp"
+                        android:layout_height="wrap_content"
+                        android:text="2"
+                        android:padding="0dp"
+                        android:insetBottom="0dp"
+                        android:insetTop="0dp"/>
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_threes_3"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="40dp"
+                        android:layout_height="wrap_content"
+                        android:text="3"
+                        android:padding="0dp"
+                        android:insetBottom="0dp"
+                        android:insetTop="0dp"/>
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_threes_4"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="40dp"
+                        android:layout_height="wrap_content"
+                        android:text="4"
+                        android:padding="0dp"
+                        android:insetBottom="0dp"
+                        android:insetTop="0dp"/>
+                </com.google.android.material.button.MaterialButtonToggleGroup>
+
+                <!-- Keep hidden but accessible if needed for logic -->
                 <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content">
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:visibility="gone">
                     <AutoCompleteTextView
                         android:id="@+id/actv_red_threes"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="none"
-                        android:background="@null"/>
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"/>
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/divider"
-                android:layout_marginVertical="@dimen/spacing_16"/>
 
             <com.google.android.material.switchmaterial.SwitchMaterial
                 android:id="@+id/switch_exited"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_12"
                 android:text="@string/exited_label"
-                android:textStyle="bold"/>
+                style="@style/TextAppearance.Material3.LabelLarge"
+                android:textColor="@color/onSurface"/>
 
             <TextView
                 android:id="@+id/tv_exited_hint"
@@ -197,21 +292,72 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_12"
                 android:textColor="@color/onSurfaceVariant"
-                android:layout_marginBottom="@dimen/spacing_8"
+                android:layout_marginBottom="@dimen/spacing_4"
                 android:visibility="gone"
                 tools:text="أنهى الفريق الأول الجولة"/>
 
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/remaining_points"
-                android:layout_marginTop="@dimen/spacing_8">
+                android:layout_marginTop="@dimen/spacing_16"
+                android:layout_marginBottom="@dimen/spacing_4">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_remaining_points"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number"/>
+                    android:inputType="number"
+                    android:textColor="@color/negativeScore"/>
             </com.google.android.material.textfield.TextInputLayout>
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_burn_plus_25"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="+25"
+                        android:layout_marginEnd="@dimen/spacing_4"
+                        android:minWidth="60dp"
+                        app:paddingStart="4dp"
+                        app:paddingEnd="4dp"/>
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_burn_plus_50"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="+50"
+                        android:layout_marginEnd="@dimen/spacing_4"
+                        android:minWidth="60dp"
+                        app:paddingStart="4dp"
+                        app:paddingEnd="4dp"/>
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_burn_plus_100"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="+100"
+                        android:layout_marginEnd="@dimen/spacing_4"
+                        android:minWidth="60dp"
+                        app:paddingStart="4dp"
+                        app:paddingEnd="4dp"/>
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_burn_clear"
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="مسح"
+                        android:textColor="@color/negativeScore"/>
+                </LinearLayout>
+            </HorizontalScrollView>
 
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
@@ -220,10 +366,11 @@
         android:id="@+id/tv_meld_total"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_12"
+        android:layout_marginTop="@dimen/spacing_16"
         android:layout_gravity="end"
-        android:textStyle="bold"
+        style="@style/TextAppearance.Material3.TitleMedium"
         android:textColor="@color/primary"
+        android:textStyle="bold"
         tools:text="مجموع نقاط الأبواب: 120"/>
 
 </LinearLayout>

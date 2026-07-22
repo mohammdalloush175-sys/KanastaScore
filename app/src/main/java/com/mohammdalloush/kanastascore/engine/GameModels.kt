@@ -64,7 +64,7 @@ data class DirectMeldScoreInput(
 )
 
 data class TeamRoundInput(
-    val scoringMode: MeldScoringMode = MeldScoringMode.DETAILED,
+    val scoringMode: MeldScoringMode = MeldScoringMode.DIRECT_TOTAL,
     val melds: List<MeldInput> = emptyList(),
     val directInput: DirectMeldScoreInput = DirectMeldScoreInput(),
     val redThreesCount: Int = 0,
@@ -99,4 +99,12 @@ data class GameState(
     val targetScore: Int = 5000,
     val rounds: List<RoundRecord> = emptyList(),
     val schemaVersion: Int = 2
+)
+
+data class BackupEnvelope(
+    val appName: String = "KanastaScore",
+    val backupVersion: Int = 1,
+    val exportedAt: Long = System.currentTimeMillis(),
+    val schemaVersion: Int = 3,
+    val matchesStore: MatchesStore
 )

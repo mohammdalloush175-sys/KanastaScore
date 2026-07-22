@@ -7,8 +7,10 @@
     <dimen name="spacing_20">20dp</dimen>
     <dimen name="spacing_24">24dp</dimen>
     <dimen name="spacing_32">32dp</dimen>
+    <dimen name="spacing_40">40dp</dimen>
 
-    <dimen name="card_corner_radius">18dp</dimen>
+    <dimen name="card_corner_radius">16dp</dimen>
+    <dimen name="card_stroke_width">1.5dp</dimen>
     <dimen name="button_corner_radius">14dp</dimen>
     <dimen name="chip_corner_radius">8dp</dimen>
 
@@ -21,5 +23,6 @@
     <dimen name="text_16">16sp</dimen>
     <dimen name="text_14">14sp</dimen>
     <dimen name="text_12">12sp</dimen>
+    <dimen name="text_10">10sp</dimen>
     <dimen name="text_huge">32sp</dimen>
 </resources>

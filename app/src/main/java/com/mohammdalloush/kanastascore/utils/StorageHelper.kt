@@ -70,4 +70,24 @@ object StorageHelper {
             AppThemeMode.SYSTEM
         }
     }
+
+    fun exportBackup(store: MatchesStore): String {
+        val envelope = BackupEnvelope(matchesStore = store)
+        return Gson().toJson(envelope)
+    }
+
+    fun importBackup(json: String): MatchesStore? {
+        return try {
+            val envelope = Gson().fromJson(json, BackupEnvelope::class.java)
+            if (envelope.appName != "KanastaScore") return null
+            envelope.matchesStore
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    fun clearAllData(context: Context) {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        prefs.edit().remove(KEY_MATCHES_STORE).remove(KEY_GAME_STATE_OLD).apply()
+    }
 }

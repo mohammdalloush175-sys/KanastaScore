@@ -14,11 +14,7 @@ import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import com.mohammdalloush.kanastascore.databinding.ActivityMainBinding
 import com.mohammdalloush.kanastascore.engine.AppThemeMode
-import com.mohammdalloush.kanastascore.ui.HistoryFragment
-import com.mohammdalloush.kanastascore.ui.MatchSetupFragment
-import com.mohammdalloush.kanastascore.ui.MatchesFragment
-import com.mohammdalloush.kanastascore.ui.ResultFragment
-import com.mohammdalloush.kanastascore.ui.RoundInputFragment
+import com.mohammdalloush.kanastascore.ui.*
 import com.mohammdalloush.kanastascore.utils.StorageHelper
 import com.mohammdalloush.kanastascore.viewmodel.GameViewModel
 
@@ -77,9 +73,14 @@ class MainActivity : AppCompatActivity() {
                         replaceFragment(MatchesFragment())
                     }
                     is ResultFragment -> {
-                        // If round recorded, go home. If not, go back to input.
-                        // For simplicity, let's go to round input.
                         replaceFragment(RoundInputFragment())
+                    }
+                    is SettingsFragment, is StatisticsFragment, is RulesFragment, is MatchEndFragment -> {
+                        if (supportFragmentManager.backStackEntryCount > 0) {
+                            supportFragmentManager.popBackStack()
+                        } else {
+                            replaceFragment(MatchesFragment())
+                        }
                     }
                     is MatchesFragment -> {
                         isEnabled = false
@@ -113,6 +114,10 @@ class MainActivity : AppCompatActivity() {
         AppCompatDelegate.setDefaultNightMode(nightMode)
     }
 
+    fun updateAppTheme(mode: AppThemeMode) {
+        applyTheme(mode)
+    }
+
     fun replaceFragment(fragment: Fragment, addToBackStack: Boolean = false) {
         val transaction = supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, fragment)
@@ -134,8 +139,12 @@ class MainActivity : AppCompatActivity() {
                 val nextRound = (match?.gameState?.rounds?.maxByOrNull { it.roundNumber }?.roundNumber ?: 0) + 1
                 getString(R.string.round_number_label, nextRound)
             }
-            is ResultFragment -> getString(R.string.result_title_simple)
+            is ResultFragment -> getString(R.string.preview_title)
             is HistoryFragment -> getString(R.string.history_title)
+            is SettingsFragment -> getString(R.string.settings_title)
+            is StatisticsFragment -> getString(R.string.statistics_label)
+            is RulesFragment -> getString(R.string.rules_title)
+            is MatchEndFragment -> getString(R.string.match_ended_title)
             else -> getString(R.string.app_name)
         }
         

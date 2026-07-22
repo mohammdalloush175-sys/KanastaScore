@@ -8,23 +8,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import com.google.android.material.snackbar.Snackbar
 import com.mohammdalloush.kanastascore.MainActivity
 import com.mohammdalloush.kanastascore.R
 import com.mohammdalloush.kanastascore.databinding.FragmentRoundInputBinding
 import com.mohammdalloush.kanastascore.databinding.LayoutTeamRoundInputBinding
 import com.mohammdalloush.kanastascore.engine.*
-import com.mohammdalloush.kanastascore.ui.adapters.MeldAdapter
 import com.mohammdalloush.kanastascore.viewmodel.GameViewModel
 
 class RoundInputFragment : Fragment() {
 
     private var _binding: FragmentRoundInputBinding? = null
     private val binding get() = _binding!!
-
-    private lateinit var team1Adapter: MeldAdapter
-    private lateinit var team2Adapter: MeldAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentRoundInputBinding.inflate(inflater, container, false)
@@ -44,14 +42,21 @@ class RoundInputFragment : Fragment() {
         setupTeamSection(binding.sectionTeam2, 1, state.teams[1])
 
         binding.btnPreview.setOnClickListener {
-            val error = ScoreValidator.validateRound(
-                viewModel.team1RoundInput.value!!,
-                viewModel.team2RoundInput.value!!
-            )
+            val t1 = viewModel.team1RoundInput.value!!
+            val t2 = viewModel.team2RoundInput.value!!
+            
+            val error = ScoreValidator.validateRound(t1, t2)
             if (error != null) {
                 Toast.makeText(requireContext(), error, Toast.LENGTH_LONG).show()
             } else {
-                mainActivity.replaceFragment(ResultFragment(), true)
+                val warnings = ScoreValidator.getWarnings(t1, t2)
+                if (warnings.isNotEmpty()) {
+                    showWarningsDialog(warnings) {
+                        mainActivity.replaceFragment(ResultFragment(), true)
+                    }
+                } else {
+                    mainActivity.replaceFragment(ResultFragment(), true)
+                }
             }
         }
 
@@ -64,9 +69,44 @@ class RoundInputFragment : Fragment() {
             updateExitUI(binding.sectionTeam2, it, 1)
             updateRedThreesUI(binding.sectionTeam2, it)
         }
+
+        viewModel.lastRecordedRoundNumber.observe(viewLifecycleOwner) { roundNumber ->
+            if (roundNumber != null) {
+                showUndoSnackbar(roundNumber)
+            }
+        }
+    }
+
+    private fun showUndoSnackbar(roundNumber: Int) {
+        val viewModel = (activity as MainActivity).viewModel
+        Snackbar.make(binding.root, getString(R.string.round_recorded_msg, roundNumber), Snackbar.LENGTH_LONG)
+            .setAction(R.string.undo_label) {
+                viewModel.undoLastRound()
+                Toast.makeText(requireContext(), R.string.undo_label, Toast.LENGTH_SHORT).show()
+            }
+            .addCallback(object : Snackbar.Callback() {
+                override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                    if (event != DISMISS_EVENT_ACTION) {
+                        viewModel.clearUndo()
+                    }
+                }
+            })
+            .show()
+        viewModel.consumeRecordEvent() // Clear so it doesn't show again on rotation
+    }
+
+    private fun showWarningsDialog(warnings: List<String>, onConfirm: () -> Unit) {
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.review_data_title)
+            .setMessage(warnings.joinToString("\n\n"))
+            .setPositiveButton(R.string.continue_preview) { _, _ -> onConfirm() }
+            .setNegativeButton(R.string.edit_round, null)
+            .show()
     }
 
     private fun setupHeader(state: GameState, viewModel: GameViewModel) {
+        val nextRoundNumber = (state.rounds.maxByOrNull { it.roundNumber }?.roundNumber ?: 0) + 1
+        binding.tvRoundTitle.text = getString(R.string.round_number_label, nextRoundNumber)
         binding.tvTargetInfo.text = getString(R.string.target_score_info, state.targetScore)
 
         val t1Score = viewModel.getCumulativeScore(0)
@@ -84,59 +124,31 @@ class RoundInputFragment : Fragment() {
         val mainActivity = activity as MainActivity
         val viewModel = mainActivity.viewModel
         val inputLiveData = if (teamIndex == 0) viewModel.team1RoundInput else viewModel.team2RoundInput
+        
+        // Legacy Migration: If input is DETAILED, migrate it to DIRECT_TOTAL summary
+        val currentInput = inputLiveData.value!!
+        if (currentInput.scoringMode == MeldScoringMode.DETAILED) {
+            val totalMeldPoints = currentInput.melds.sumOf { ScoreCalculator.calculateMeldPoints(it) }
+            val redCanastas = currentInput.melds.count { it.canastaType == CanastaType.RED }
+            val blackCanastas = currentInput.melds.count { it.canastaType == CanastaType.BLACK }
+            
+            val migratedInput = currentInput.copy(
+                scoringMode = MeldScoringMode.DIRECT_TOTAL,
+                directInput = DirectMeldScoreInput(
+                    totalMeldPoints = totalMeldPoints,
+                    redCanastasCount = redCanastas,
+                    blackCanastasCount = blackCanastas
+                )
+            )
+            inputLiveData.value = migratedInput
+            viewModel.saveCurrentDraft()
+        }
+        
         val initialInput = inputLiveData.value!!
 
         sectionBinding.tvTeamName.text = team.name
 
-        // Scoring Mode Toggle
-        sectionBinding.toggleScoringMode.check(
-            if (initialInput.scoringMode == MeldScoringMode.DETAILED) R.id.btn_mode_detailed else R.id.btn_mode_direct
-        )
-        sectionBinding.toggleScoringMode.addOnButtonCheckedListener { _, checkedId, isChecked ->
-            if (isChecked) {
-                val newMode = if (checkedId == R.id.btn_mode_detailed) MeldScoringMode.DETAILED else MeldScoringMode.DIRECT_TOTAL
-                inputLiveData.value = inputLiveData.value?.copy(scoringMode = newMode)
-                updateModeVisibility(sectionBinding, newMode)
-                viewModel.saveCurrentDraft()
-            }
-        }
-        updateModeVisibility(sectionBinding, initialInput.scoringMode)
-
-        // Detailed Mode
-        val adapter = MeldAdapter(
-            initialInput.melds.toMutableList(),
-            onMeldChanged = {
-                val current = inputLiveData.value!!
-                val newMelds = if (teamIndex == 0) team1Adapter.getMelds() else team2Adapter.getMelds()
-                inputLiveData.value = current.copy(melds = newMelds)
-                updateMeldTotal(sectionBinding, inputLiveData.value!!)
-                viewModel.saveCurrentDraft()
-            },
-            onMeldDeleted = { pos ->
-                val current = inputLiveData.value!!
-                val newMelds = current.melds.toMutableList().apply { removeAt(pos) }
-                inputLiveData.value = current.copy(melds = newMelds)
-                if (teamIndex == 0) team1Adapter.updateData(newMelds) else team2Adapter.updateData(newMelds)
-                updateMeldTotal(sectionBinding, inputLiveData.value!!)
-                viewModel.saveCurrentDraft()
-            }
-        )
-        if (teamIndex == 0) team1Adapter = adapter else team2Adapter = adapter
-        sectionBinding.rvMelds.adapter = adapter
-        sectionBinding.tvNoMelds.isVisible = initialInput.melds.isEmpty()
-
-        sectionBinding.btnAddMeld.setOnClickListener {
-            val current = inputLiveData.value!!
-            val newMelds = current.melds.toMutableList().apply { 
-                add(MeldInput(rank = CardRank.THREE, naturalCount = 0, twosCount = 0, jokersCount = 0)) 
-            }
-            inputLiveData.value = current.copy(melds = newMelds)
-            adapter.updateData(newMelds)
-            sectionBinding.tvNoMelds.isVisible = false
-            viewModel.saveCurrentDraft()
-        }
-
-        // Direct Mode
+        // Direct Mode Inputs
         sectionBinding.etDirectTotal.setText(initialInput.directInput.totalMeldPoints.toString())
         setupTextWatcher(sectionBinding.etDirectTotal) {
             val current = inputLiveData.value!!
@@ -144,6 +156,7 @@ class RoundInputFragment : Fragment() {
             updateMeldTotal(sectionBinding, inputLiveData.value!!)
             viewModel.saveCurrentDraft()
         }
+        
         sectionBinding.etRedCanastas.setText(initialInput.directInput.redCanastasCount.toString())
         setupTextWatcher(sectionBinding.etRedCanastas) {
             val current = inputLiveData.value!!
@@ -151,6 +164,7 @@ class RoundInputFragment : Fragment() {
             updateMeldTotal(sectionBinding, inputLiveData.value!!)
             viewModel.saveCurrentDraft()
         }
+        
         sectionBinding.etBlackCanastas.setText(initialInput.directInput.blackCanastasCount.toString())
         setupTextWatcher(sectionBinding.etBlackCanastas) {
             val current = inputLiveData.value!!
@@ -159,14 +173,45 @@ class RoundInputFragment : Fragment() {
             viewModel.saveCurrentDraft()
         }
 
-        // Red Threes
-        val options = resources.getStringArray(R.array.red_threes_options)
-        val spinnerAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, options)
-        sectionBinding.actvRedThrees.setAdapter(spinnerAdapter)
-        sectionBinding.actvRedThrees.setText(initialInput.redThreesCount.toString(), false)
-        sectionBinding.actvRedThrees.setOnItemClickListener { _, _, index, _ ->
-            if (index != inputLiveData.value?.redThreesCount) {
-                viewModel.setRedThrees(teamIndex, index)
+        // Shortcuts for Meld Points
+        sectionBinding.btnMeldPlus50.setOnClickListener { addMeldPoints(sectionBinding, 50) }
+        sectionBinding.btnMeldPlus100.setOnClickListener { addMeldPoints(sectionBinding, 100) }
+        sectionBinding.btnMeldPlus200.setOnClickListener { addMeldPoints(sectionBinding, 200) }
+        sectionBinding.btnMeldClear.setOnClickListener {
+            val current = sectionBinding.etDirectTotal.text.toString().toIntOrNull() ?: 0
+            if (current > 500) {
+                AlertDialog.Builder(requireContext())
+                    .setTitle(R.string.confirm_clear)
+                    .setMessage(R.string.confirm_clear_meld_msg)
+                    .setPositiveButton(R.string.yes) { _, _ -> sectionBinding.etDirectTotal.setText("0") }
+                    .setNegativeButton(R.string.no, null)
+                    .show()
+            } else {
+                sectionBinding.etDirectTotal.setText("0")
+            }
+        }
+
+        // Shortcuts for Canastas
+        sectionBinding.btnRedPlus.setOnClickListener { incrementEditText(sectionBinding.etRedCanastas) }
+        sectionBinding.btnRedMinus.setOnClickListener { decrementEditText(sectionBinding.etRedCanastas) }
+        sectionBinding.btnBlackPlus.setOnClickListener { incrementEditText(sectionBinding.etBlackCanastas) }
+        sectionBinding.btnBlackMinus.setOnClickListener { decrementEditText(sectionBinding.etBlackCanastas) }
+
+        // Red Threes Toggle Group
+        updateThreesToggle(sectionBinding, initialInput.redThreesCount)
+        sectionBinding.toggleGroupThrees.addOnButtonCheckedListener { group, checkedId, isChecked ->
+            if (isChecked) {
+                val count = when (checkedId) {
+                    sectionBinding.btnThrees0.id -> 0
+                    sectionBinding.btnThrees1.id -> 1
+                    sectionBinding.btnThrees2.id -> 2
+                    sectionBinding.btnThrees3.id -> 3
+                    sectionBinding.btnThrees4.id -> 4
+                    else -> 0
+                }
+                if (count != inputLiveData.value?.redThreesCount) {
+                    viewModel.setRedThrees(teamIndex, count)
+                }
             }
         }
 
@@ -185,12 +230,25 @@ class RoundInputFragment : Fragment() {
             viewModel.saveCurrentDraft()
         }
 
-        updateMeldTotal(sectionBinding, initialInput)
-    }
+        // Shortcuts for Burning
+        sectionBinding.btnBurnPlus25.setOnClickListener { addBurnPoints(sectionBinding, 25) }
+        sectionBinding.btnBurnPlus50.setOnClickListener { addBurnPoints(sectionBinding, 50) }
+        sectionBinding.btnBurnPlus100.setOnClickListener { addBurnPoints(sectionBinding, 100) }
+        sectionBinding.btnBurnClear.setOnClickListener {
+            val current = sectionBinding.etRemainingPoints.text.toString().toIntOrNull() ?: 0
+            if (current > 300) {
+                AlertDialog.Builder(requireContext())
+                    .setTitle(R.string.confirm_clear)
+                    .setMessage(R.string.confirm_clear_burn_msg)
+                    .setPositiveButton(R.string.yes) { _, _ -> sectionBinding.etRemainingPoints.setText("0") }
+                    .setNegativeButton(R.string.no, null)
+                    .show()
+            } else {
+                sectionBinding.etRemainingPoints.setText("0")
+            }
+        }
 
-    private fun updateModeVisibility(sectionBinding: LayoutTeamRoundInputBinding, mode: MeldScoringMode) {
-        sectionBinding.layoutDetailedMode.isVisible = (mode == MeldScoringMode.DETAILED)
-        sectionBinding.layoutDirectMode.isVisible = (mode == MeldScoringMode.DIRECT_TOTAL)
+        updateMeldTotal(sectionBinding, initialInput)
     }
 
     private fun updateExitUI(sectionBinding: LayoutTeamRoundInputBinding, input: TeamRoundInput, teamIndex: Int) {
@@ -210,23 +268,51 @@ class RoundInputFragment : Fragment() {
     }
 
     private fun updateRedThreesUI(sectionBinding: LayoutTeamRoundInputBinding, input: TeamRoundInput) {
-        if (sectionBinding.actvRedThrees.text.toString() != input.redThreesCount.toString()) {
-            sectionBinding.actvRedThrees.setText(input.redThreesCount.toString(), false)
+        updateThreesToggle(sectionBinding, input.redThreesCount)
+    }
+
+    private fun updateThreesToggle(sectionBinding: LayoutTeamRoundInputBinding, count: Int) {
+        val buttonId = when (count) {
+            0 -> sectionBinding.btnThrees0.id
+            1 -> sectionBinding.btnThrees1.id
+            2 -> sectionBinding.btnThrees2.id
+            3 -> sectionBinding.btnThrees3.id
+            4 -> sectionBinding.btnThrees4.id
+            else -> sectionBinding.btnThrees0.id
+        }
+        if (sectionBinding.toggleGroupThrees.checkedButtonId != buttonId) {
+            sectionBinding.toggleGroupThrees.check(buttonId)
+        }
+    }
+
+    private fun addMeldPoints(sectionBinding: LayoutTeamRoundInputBinding, amount: Int) {
+        val current = sectionBinding.etDirectTotal.text.toString().toIntOrNull() ?: 0
+        sectionBinding.etDirectTotal.setText((current + amount).toString())
+    }
+
+    private fun addBurnPoints(sectionBinding: LayoutTeamRoundInputBinding, amount: Int) {
+        val current = sectionBinding.etRemainingPoints.text.toString().toIntOrNull() ?: 0
+        sectionBinding.etRemainingPoints.setText((current + amount).toString())
+    }
+
+    private fun incrementEditText(editText: android.widget.EditText) {
+        val current = editText.text.toString().toIntOrNull() ?: 0
+        editText.setText((current + 1).toString())
+    }
+
+    private fun decrementEditText(editText: android.widget.EditText) {
+        val current = editText.text.toString().toIntOrNull() ?: 0
+        if (current > 0) {
+            editText.setText((current - 1).toString())
         }
     }
 
     private fun updateMeldTotal(sectionBinding: LayoutTeamRoundInputBinding, input: TeamRoundInput) {
-        val total = if (input.scoringMode == MeldScoringMode.DETAILED) {
-            input.melds.sumOf { ScoreCalculator.calculateMeldPoints(it) }
-        } else {
-            input.directInput.totalMeldPoints
-        }
+        val total = input.directInput.totalMeldPoints
         sectionBinding.tvMeldTotal.text = getString(R.string.total_meld_points, total)
         
-        if (input.scoringMode == MeldScoringMode.DIRECT_TOTAL) {
-            val hasCanasta = (input.directInput.redCanastasCount + input.directInput.blackCanastasCount) > 0
-            sectionBinding.tvDirectModeWarning.isVisible = !hasCanasta
-        }
+        val hasCanasta = (input.directInput.redCanastasCount + input.directInput.blackCanastasCount) > 0
+        sectionBinding.tvDirectModeWarning.isVisible = !hasCanasta
     }
 
     private fun setupTextWatcher(editText: android.widget.EditText, onTextChange: (String) -> Unit) {

@@ -19,6 +19,15 @@ class GameViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
     
     val editingRoundId = MutableLiveData<String?>(null)
 
+    private val _isRecordingRound = MutableLiveData<Boolean>(false)
+    val isRecordingRound: LiveData<Boolean> = _isRecordingRound
+
+    private var lastUndoableRound: RoundRecord? = null
+    private var lastUndoableMatchId: String? = null
+
+    private val _lastRecordedRoundNumber = MutableLiveData<Int?>(null)
+    val lastRecordedRoundNumber: LiveData<Int?> = _lastRecordedRoundNumber
+
     private val _appThemeMode = MutableLiveData<AppThemeMode>(AppThemeMode.SYSTEM)
     val appThemeMode: LiveData<AppThemeMode> = _appThemeMode
 
@@ -141,6 +150,10 @@ class GameViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
     fun addRound(record: RoundRecord) {
         val matchId = activeMatchId.value ?: return
         val currentStore = _matchesStore.value ?: return
+        
+        if (_isRecordingRound.value == true) return
+        _isRecordingRound.value = true
+
         val matchIndex = currentStore.matches.indexOfFirst { it.id == matchId }
         if (matchIndex >= 0) {
             val match = currentStore.matches[matchIndex]
@@ -164,10 +177,71 @@ class GameViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
                 status = newStatus,
                 updatedAt = System.currentTimeMillis()
             )
+            
+            lastUndoableRound = record
+            lastUndoableMatchId = matchId
+            _lastRecordedRoundNumber.value = record.roundNumber
+
             val newList = currentStore.matches.toMutableList()
             newList[matchIndex] = updatedMatch
             _matchesStore.value = currentStore.copy(matches = newList)
         }
+        _isRecordingRound.value = false
+    }
+
+    fun undoLastRound() {
+        val round = lastUndoableRound ?: return
+        val matchId = lastUndoableMatchId ?: return
+        val currentStore = _matchesStore.value ?: return
+        
+        val matchIndex = currentStore.matches.indexOfFirst { it.id == matchId }
+        if (matchIndex >= 0) {
+            val match = currentStore.matches[matchIndex]
+            val newRounds = match.gameState.rounds.filter { it.id != round.id }
+            val updatedRounds = resequenceRounds(newRounds)
+            
+            // Restore draft from the undone round
+            team1RoundInput.value = round.team1Input
+            team2RoundInput.value = round.team2Input
+            
+            val updatedMatch = match.copy(
+                gameState = match.gameState.copy(rounds = updatedRounds),
+                status = MatchStatus.ACTIVE, // Reverting completion if it happened
+                draft = RoundDraft(round.team1Input, round.team2Input),
+                updatedAt = System.currentTimeMillis()
+            )
+            val newList = currentStore.matches.toMutableList()
+            newList[matchIndex] = updatedMatch
+            _matchesStore.value = currentStore.copy(matches = newList)
+            
+            lastUndoableRound = null
+            lastUndoableMatchId = null
+        }
+    }
+
+    fun clearUndo() {
+        lastUndoableRound = null
+        lastUndoableMatchId = null
+    }
+
+    fun consumeRecordEvent() {
+        _lastRecordedRoundNumber.value = null
+    }
+
+    fun reMatch() {
+        val currentMatch = getActiveMatch() ?: return
+        val newMatchName = "إعادة: ${currentMatch.matchName}"
+        val newMatch = SavedMatch(
+            matchName = newMatchName,
+            gameState = GameState(
+                teams = currentMatch.gameState.teams,
+                targetScore = currentMatch.gameState.targetScore
+            )
+        )
+        val currentStore = _matchesStore.value ?: MatchesStore()
+        val newList = currentStore.matches.toMutableList().apply { add(0, newMatch) }
+        _matchesStore.value = currentStore.copy(matches = newList)
+        setActiveMatch(newMatch.id)
     }
 
     private fun checkIfGameEnded(state: GameState): Boolean {

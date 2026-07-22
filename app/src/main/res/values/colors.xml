@@ -20,8 +20,8 @@
     <color name="onSurface">#172127</color>
     <color name="onSurfaceVariant">#5F6D75</color>
 
-    <color name="outline">#CBD5DB</color>
-    <color name="divider">#E1E8ED</color>
+    <color name="outline">#B0BEC5</color>
+    <color name="divider">#CFD8DC</color>
 
     <!-- Semantic Colors -->
     <color name="canastaRed">#D85A68</color>

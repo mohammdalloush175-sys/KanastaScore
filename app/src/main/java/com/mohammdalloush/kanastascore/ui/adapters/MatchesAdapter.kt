@@ -12,7 +12,8 @@ import com.mohammdalloush.kanastascore.engine.SavedMatch
 class MatchesAdapter(
     private var matches: List<SavedMatch>,
     private val onAction: (SavedMatch) -> Unit,
-    private val onDelete: (SavedMatch) -> Unit
+    private val onDelete: (SavedMatch) -> Unit,
+    private val onShare: (SavedMatch) -> Unit
 ) : RecyclerView.Adapter<MatchesAdapter.MatchViewHolder>() {
 
     class MatchViewHolder(val binding: ItemMatchBinding) : RecyclerView.ViewHolder(binding.root)
@@ -49,6 +50,7 @@ class MatchesAdapter(
         binding.btnAction.text = if (match.status == MatchStatus.ACTIVE) context.getString(R.string.continue_label) else context.getString(R.string.view_results)
         binding.btnAction.setOnClickListener { onAction(match) }
         binding.btnDelete.setOnClickListener { onDelete(match) }
+        binding.btnShare.setOnClickListener { onShare(match) }
         binding.root.setOnClickListener { onAction(match) }
     }
 

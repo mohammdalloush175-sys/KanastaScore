@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_16">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="إحصائيات عامة"
+                style="@style/TextAppearance.Material3.TitleMedium"
+                android:textColor="@color/primary"
+                android:layout_marginBottom="@dimen/spacing_12"
+                android:layout_marginStart="@dimen/spacing_8"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_24">
+                <TextView
+                    android:id="@+id/tv_global_stats"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/spacing_16"
+                    android:lineSpacingExtra="8dp"
+                    tools:text="عدد المباريات: 5\nعدد الجولات: 42..."/>
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="أداء الفرق"
+                style="@style/TextAppearance.Material3.TitleMedium"
+                android:textColor="@color/primary"
+                android:layout_marginBottom="@dimen/spacing_12"
+                android:layout_marginStart="@dimen/spacing_8"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_team_stats"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_24">
+                <LinearLayout
+                    android:id="@+id/container_team_stats"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/spacing_8"/>
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/tv_no_stats"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/no_stats_available"
+                android:gravity="center"
+                android:padding="@dimen/spacing_32"
+                android:alpha="0.6"
+                android:visibility="gone"/>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>
