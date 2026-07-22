@@ -1,218 +1,222 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
+    android:orientation="vertical"
     android:background="@color/background">
 
-    <LinearLayout
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="@dimen/spacing_16">
+        android:layout_height="?attr/actionBarSize"
+        app:titleCentered="true"
+        app:titleTextAppearance="@style/TextAppearance.KanastaScore.Title"
+        tools:title="نتيجة الجولة 1"/>
 
-        <TextView
-            android:id="@+id/tv_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/TextAppearance.KanastaScore.Title"
-            android:layout_gravity="center"
-            android:layout_marginTop="@dimen/spacing_8"
-            android:layout_marginBottom="@dimen/spacing_24"
-            tools:text="نتيجة الجولة 1"/>
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-        <!-- Comparison Dashboard -->
-        <com.google.android.material.card.MaterialCardView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/spacing_24"
-            app:cardBackgroundColor="@color/primaryContainer">
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_16">
 
-            <LinearLayout
+            <!-- Comparison Dashboard -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="@dimen/spacing_16"
-                android:baselineAligned="false">
+                android:layout_marginBottom="@dimen/spacing_24"
+                app:cardBackgroundColor="@color/primaryContainer">
 
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/spacing_16"
+                    android:baselineAligned="false">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center">
+                        <TextView
+                            android:id="@+id/tv_team1_summary_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/onPrimary"
+                            android:alpha="0.8"
+                            android:textStyle="bold"
+                            tools:text="الفريق 1"/>
+                        <TextView
+                            android:id="@+id/tv_team1_round_total"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/onPrimary"
+                            android:textSize="@dimen/text_huge"
+                            android:textStyle="bold"
+                            tools:text="+540"/>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/onPrimary"
+                        android:alpha="0.2"
+                        android:layout_marginHorizontal="@dimen/spacing_8"/>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center">
+                        <TextView
+                            android:id="@+id/tv_team2_summary_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/onPrimary"
+                            android:alpha="0.8"
+                            android:textStyle="bold"
+                            tools:text="الفريق 2"/>
+                        <TextView
+                            android:id="@+id/tv_team2_round_total"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/secondary"
+                            android:textSize="@dimen/text_huge"
+                            android:textStyle="bold"
+                            tools:text="+210"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Team 1 Breakdown -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_16">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:gravity="center">
+                    android:padding="@dimen/spacing_16">
+
                     <TextView
-                        android:id="@+id/tv_team1_summary_name"
+                        android:id="@+id/tv_team1_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/onPrimary"
-                        android:alpha="0.8"
-                        android:textStyle="bold"
+                        style="@style/TextAppearance.KanastaScore.SectionTitle"
                         tools:text="الفريق 1"/>
-                    <TextView
-                        android:id="@+id/tv_team1_round_total"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/onPrimary"
-                        android:textSize="@dimen/text_huge"
-                        android:textStyle="bold"
-                        tools:text="+540"/>
-                </LinearLayout>
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/onPrimary"
-                    android:alpha="0.2"
-                    android:layout_marginHorizontal="@dimen/spacing_8"/>
+                    <TextView
+                        android:id="@+id/tv_team1_result_details"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_12"
+                        android:lineSpacingExtra="6dp"
+                        android:textColor="@color/onSurfaceVariant"
+                        tools:text="تفاصيل النقاط..."/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/divider"
+                        android:layout_marginVertical="@dimen/spacing_12"/>
+
+                    <TextView
+                        android:id="@+id/tv_team1_progression"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textStyle="italic"
+                        android:textColor="@color/onSurface"
+                        tools:text="المجموع: 1200 -> 1740"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Team 2 Breakdown -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_24">
 
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:orientation="vertical"
-                    android:gravity="center">
+                    android:padding="@dimen/spacing_16">
+
                     <TextView
-                        android:id="@+id/tv_team2_summary_name"
+                        android:id="@+id/tv_team2_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/onPrimary"
-                        android:alpha="0.8"
-                        android:textStyle="bold"
-                        tools:text="الفريق 2"/>
-                    <TextView
-                        android:id="@+id/tv_team2_round_total"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        style="@style/TextAppearance.KanastaScore.SectionTitle"
                         android:textColor="@color/secondary"
-                        android:textSize="@dimen/text_huge"
-                        android:textStyle="bold"
-                        tools:text="+210"/>
+                        tools:text="الفريق 2"/>
+
+                    <TextView
+                        android:id="@+id/tv_team2_result_details"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_12"
+                        android:lineSpacingExtra="6dp"
+                        android:textColor="@color/onSurfaceVariant"
+                        tools:text="تفاصيل النقاط..."/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/divider"
+                        android:layout_marginVertical="@dimen/spacing_12"/>
+
+                    <TextView
+                        android:id="@+id/tv_team2_progression"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textStyle="italic"
+                        android:textColor="@color/onSurface"
+                        tools:text="المجموع: 850 -> 1060"/>
                 </LinearLayout>
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+            </com.google.android.material.card.MaterialCardView>
 
-        <!-- Team 1 Breakdown -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/spacing_16">
-
-            <LinearLayout
+            <TextView
+                android:id="@+id/tv_winner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/spacing_16">
+                android:gravity="center"
+                android:textColor="@color/onPrimary"
+                android:textSize="@dimen/text_20"
+                android:textStyle="bold"
+                android:layout_marginBottom="@dimen/spacing_24"
+                android:padding="@dimen/spacing_16"
+                android:background="@color/secondary"
+                android:visibility="gone"
+                tools:visibility="visible"
+                tools:text="الفائز هو الفريق الأول!"/>
 
-                <TextView
-                    android:id="@+id/tv_team1_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/TextAppearance.KanastaScore.SectionTitle"
-                    tools:text="الفريق 1"/>
-
-                <TextView
-                    android:id="@+id/tv_team1_result_details"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_12"
-                    android:lineSpacingExtra="6dp"
-                    android:textColor="@color/onSurfaceVariant"
-                    tools:text="تفاصيل النقاط..."/>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/divider"
-                    android:layout_marginVertical="@dimen/spacing_12"/>
-
-                <TextView
-                    android:id="@+id/tv_team1_progression"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textStyle="italic"
-                    android:textColor="@color/onSurface"
-                    tools:text="المجموع: 1200 -> 1740"/>
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Team 2 Breakdown -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/spacing_24">
-
-            <LinearLayout
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_record"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/spacing_16">
+                android:text="@string/record_round"
+                android:padding="@dimen/spacing_16"
+                app:icon="@android:drawable/ic_menu_save"/>
 
-                <TextView
-                    android:id="@+id/tv_team2_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/TextAppearance.KanastaScore.SectionTitle"
-                    android:textColor="@color/secondary"
-                    tools:text="الفريق 2"/>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_edit"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/edit_round"
+                android:layout_marginTop="@dimen/spacing_8"/>
 
-                <TextView
-                    android:id="@+id/tv_team2_result_details"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_12"
-                    android:lineSpacingExtra="6dp"
-                    android:textColor="@color/onSurfaceVariant"
-                    tools:text="تفاصيل النقاط..."/>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/divider"
-                    android:layout_marginVertical="@dimen/spacing_12"/>
-
-                <TextView
-                    android:id="@+id/tv_team2_progression"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textStyle="italic"
-                    android:textColor="@color/onSurface"
-                    tools:text="المجموع: 850 -> 1060"/>
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <TextView
-            android:id="@+id/tv_winner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textColor="@color/onPrimary"
-            android:textSize="@dimen/text_20"
-            android:textStyle="bold"
-            android:layout_marginBottom="@dimen/spacing_24"
-            android:padding="@dimen/spacing_16"
-            android:background="@color/secondary"
-            android:visibility="gone"
-            tools:visibility="visible"
-            tools:text="الفائز هو الفريق الأول!"/>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_record"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/record_round"
-            android:padding="@dimen/spacing_16"
-            app:icon="@android:drawable/ic_menu_save"/>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_edit"
-            style="@style/Widget.Material3.Button.TextButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/edit_round"
-            android:layout_marginTop="@dimen/spacing_8"/>
-
-    </LinearLayout>
-</androidx.core.widget.NestedScrollView>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

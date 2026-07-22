@@ -17,13 +17,25 @@ class GameViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
     
     val editingRoundId = savedStateHandle.getLiveData<String?>("editingRoundId", null)
 
+    private val _appThemeMode = MutableLiveData<AppThemeMode>(AppThemeMode.SYSTEM)
+    val appThemeMode: LiveData<AppThemeMode> = _appThemeMode
+
     fun setGameState(state: GameState?) {
         _gameState.value = state
+    }
+
+    fun setAppThemeMode(mode: AppThemeMode) {
+        _appThemeMode.value = mode
     }
 
     fun startNewGame(teams: List<Team>, targetScore: Int) {
         val newState = GameState(teams = teams, targetScore = targetScore)
         setGameState(newState)
+        clearRoundDraft()
+    }
+
+    fun startNewMatch() {
+        setGameState(null)
         clearRoundDraft()
     }
 
@@ -39,6 +51,17 @@ class GameViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
 
     fun updateTeam2Input(input: TeamRoundInput) {
         team2RoundInput.value = input
+    }
+
+    fun setRedThrees(teamIndex: Int, count: Int) {
+        val safeCount = count.coerceIn(0, 4)
+        if (teamIndex == 0) {
+            team1RoundInput.value = team1RoundInput.value?.copy(redThreesCount = safeCount)
+            team2RoundInput.value = team2RoundInput.value?.copy(redThreesCount = 4 - safeCount)
+        } else {
+            team2RoundInput.value = team2RoundInput.value?.copy(redThreesCount = safeCount)
+            team1RoundInput.value = team1RoundInput.value?.copy(redThreesCount = 4 - safeCount)
+        }
     }
 
     fun setTeamExited(teamIndex: Int, exited: Boolean) {

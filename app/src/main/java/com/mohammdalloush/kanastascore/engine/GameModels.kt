@@ -19,6 +19,10 @@ enum class MeldScoringMode {
     DETAILED, DIRECT_TOTAL
 }
 
+enum class AppThemeMode {
+    SYSTEM, LIGHT, DARK
+}
+
 data class MeldInput(
     val id: String = UUID.randomUUID().toString(),
     val rank: CardRank,

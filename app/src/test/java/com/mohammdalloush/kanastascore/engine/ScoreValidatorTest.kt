@@ -8,8 +8,8 @@ class ScoreValidatorTest {
 
     @Test
     fun testExclusiveExit() {
-        val team1 = TeamRoundInput(exited = true, directInput = DirectMeldScoreInput(redCanastasCount = 1))
-        val team2 = TeamRoundInput(exited = true, directInput = DirectMeldScoreInput(redCanastasCount = 1))
+        val team1 = TeamRoundInput(exited = true, directInput = DirectMeldScoreInput(redCanastasCount = 1), redThreesCount = 2)
+        val team2 = TeamRoundInput(exited = true, directInput = DirectMeldScoreInput(redCanastasCount = 1), redThreesCount = 2)
         
         assertNotNull(ScoreValidator.validateRound(team1, team2))
     }
@@ -31,5 +31,16 @@ class ScoreValidatorTest {
             exited = true
         )
         assertNull(ScoreValidator.validateTeamInput(legalInput))
+    }
+
+    @Test
+    fun testRedThreesSum() {
+        val team1 = TeamRoundInput(redThreesCount = 2, directInput = DirectMeldScoreInput(redCanastasCount = 1))
+        val team2 = TeamRoundInput(redThreesCount = 1, directInput = DirectMeldScoreInput(redCanastasCount = 1))
+        
+        assertNotNull(ScoreValidator.validateRound(team1, team2)) // Sum is 3
+        
+        val team2Ok = TeamRoundInput(redThreesCount = 2, directInput = DirectMeldScoreInput(redCanastasCount = 1))
+        assertNull(ScoreValidator.validateRound(team1, team2Ok)) // Sum is 4
     }
 }

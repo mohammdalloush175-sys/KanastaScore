@@ -7,6 +7,7 @@ import com.mohammdalloush.kanastascore.engine.GameState
 object StorageHelper {
     private const val PREFS_NAME = "canasta_score_preferences"
     private const val KEY_GAME_STATE = "active_game_state"
+    private const val KEY_THEME_MODE = "app_theme_mode"
 
     fun saveGameState(context: Context, state: GameState) {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -27,5 +28,20 @@ object StorageHelper {
     fun clearGameState(context: Context) {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         prefs.edit().remove(KEY_GAME_STATE).apply()
+    }
+
+    fun saveThemeMode(context: Context, mode: com.mohammdalloush.kanastascore.engine.AppThemeMode) {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        prefs.edit().putString(KEY_THEME_MODE, mode.name).apply()
+    }
+
+    fun loadThemeMode(context: Context): com.mohammdalloush.kanastascore.engine.AppThemeMode {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val name = prefs.getString(KEY_THEME_MODE, com.mohammdalloush.kanastascore.engine.AppThemeMode.SYSTEM.name)
+        return try {
+            com.mohammdalloush.kanastascore.engine.AppThemeMode.valueOf(name!!)
+        } catch (e: Exception) {
+            com.mohammdalloush.kanastascore.engine.AppThemeMode.SYSTEM
+        }
     }
 }

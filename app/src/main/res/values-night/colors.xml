@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Use the same palette for night since it's already a dark theme design -->
+    <!-- Brand Colors -->
     <color name="primary">#4FAF9F</color>
     <color name="primaryDark">#34887C</color>
     <color name="primaryContainer">#183D3A</color>
@@ -12,6 +12,7 @@
     <color name="onSecondary">#F4F7F9</color>
     <color name="onSecondaryContainer">#F4F7F9</color>
 
+    <!-- UI Colors Dark -->
     <color name="background">#10161D</color>
     <color name="surface">#18212A</color>
     <color name="surfaceVariant">#202C37</color>
@@ -22,6 +23,7 @@
     <color name="outline">#33414D</color>
     <color name="divider">#293640</color>
 
+    <!-- Semantic Colors -->
     <color name="canastaRed">#D85A68</color>
     <color name="canastaRedContainer">#42252B</color>
     <color name="canastaBlack">#AAB2BA</color>
@@ -31,4 +33,13 @@
     <color name="positiveContainer">#1E3A2A</color>
     <color name="negativeScore">#E67175</color>
     <color name="negativeContainer">#4A2123</color>
+
+    <!-- Compatibility -->
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="colorPrimary">@color/primary</color>
+    <color name="colorPrimaryDark">@color/primaryDark</color>
+    <color name="colorAccent">@color/secondary</color>
+    <color name="textPrimary">@color/onSurface</color>
+    <color name="textSecondary">@color/onSurfaceVariant</color>
 </resources>

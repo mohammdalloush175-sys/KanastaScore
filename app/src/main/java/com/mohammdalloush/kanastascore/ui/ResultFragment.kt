@@ -5,6 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import com.mohammdalloush.kanastascore.MainActivity
 import com.mohammdalloush.kanastascore.R
@@ -24,12 +27,34 @@ class ResultFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        
         val mainActivity = activity as MainActivity
         val viewModel = mainActivity.viewModel
         val state = viewModel.gameState.value ?: return
 
         val nextRoundNumber = (state.rounds.maxByOrNull { it.roundNumber }?.roundNumber ?: 0) + 1
-        binding.tvTitle.text = getString(R.string.result_title, nextRoundNumber)
+        
+        ViewCompat.setOnApplyWindowInsetsListener(binding.toolbar) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.updatePadding(top = systemBars.top)
+            insets
+        }
+
+        binding.toolbar.title = getString(R.string.result_title, nextRoundNumber)
+        binding.toolbar.inflateMenu(R.menu.menu_result)
+        binding.toolbar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.action_new_match -> {
+                    showNewMatchDialog()
+                    true
+                }
+                R.id.action_theme -> {
+                    (activity as MainActivity).showThemeSelectionDialog()
+                    true
+                }
+                else -> false
+            }
+        }
 
         val team1Input = viewModel.team1RoundInput.value!!
         val team2Input = viewModel.team2RoundInput.value!!
@@ -90,6 +115,19 @@ class ResultFragment : Fragment() {
             viewModel.clearRoundDraft()
             mainActivity.replaceFragment(RoundInputFragment())
         }
+    }
+
+    private fun showNewMatchDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.confirm_new_match_title)
+            .setMessage(R.string.confirm_new_match_message)
+            .setPositiveButton(R.string.yes) { _, _ ->
+                val activity = activity as MainActivity
+                activity.viewModel.startNewMatch()
+                activity.replaceFragment(MatchSetupFragment())
+            }
+            .setNegativeButton(R.string.no, null)
+            .show()
     }
 
     override fun onDestroyView() {

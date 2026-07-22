@@ -1,41 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Brand Colors -->
-    <color name="primary">#4FAF9F</color>
-    <color name="primaryDark">#34887C</color>
-    <color name="primaryContainer">#183D3A</color>
-    <color name="onPrimary">#F4F7F9</color>
-    <color name="onPrimaryContainer">#F4F7F9</color>
+    <color name="primary">#26877C</color>
+    <color name="primaryDark">#1A645D</color>
+    <color name="primaryContainer">#D7EFEB</color>
+    <color name="onPrimary">#FFFFFF</color>
+    <color name="onPrimaryContainer">#00201C</color>
 
     <color name="secondary">#D5A34A</color>
-    <color name="secondaryContainer">#293640</color>
-    <color name="onSecondary">#F4F7F9</color>
-    <color name="onSecondaryContainer">#F4F7F9</color>
+    <color name="secondaryContainer">#F4E4C1</color>
+    <color name="onSecondary">#FFFFFF</color>
+    <color name="onSecondaryContainer">#251A00</color>
 
-    <!-- UI Colors -->
-    <color name="background">#10161D</color>
-    <color name="surface">#18212A</color>
-    <color name="surfaceVariant">#202C37</color>
-    <color name="surfaceElevated">#253440</color>
-    <color name="onSurface">#F4F7F9</color>
-    <color name="onSurfaceVariant">#AAB5BF</color>
+    <!-- UI Colors Light -->
+    <color name="background">#F4F7F9</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="surfaceVariant">#EAF0F3</color>
+    <color name="surfaceElevated">#FFFFFF</color>
+    <color name="onSurface">#172127</color>
+    <color name="onSurfaceVariant">#5F6D75</color>
 
-    <color name="outline">#33414D</color>
-    <color name="divider">#293640</color>
+    <color name="outline">#CBD5DB</color>
+    <color name="divider">#E1E8ED</color>
 
     <!-- Semantic Colors -->
     <color name="canastaRed">#D85A68</color>
-    <color name="canastaRedContainer">#42252B</color>
-    <color name="canastaBlack">#AAB2BA</color>
-    <color name="canastaBlackContainer">#292F35</color>
+    <color name="canastaRedContainer">#FAD9DC</color>
+    <color name="canastaBlack">#545E66</color>
+    <color name="canastaBlackContainer">#E2E6EA</color>
 
-    <color name="positiveScore">#65C587</color>
-    <color name="positiveContainer">#1E3A2A</color>
-    <color name="negativeScore">#E67175</color>
-    <color name="negativeContainer">#4A2123</color>
+    <color name="positiveScore">#278852</color>
+    <color name="positiveContainer">#D8F0E2</color>
+    <color name="negativeScore">#C84D55</color>
+    <color name="negativeContainer">#F9DBDD</color>
 
     <color name="warning">#E3B85E</color>
-    <color name="warningContainer">#3D351D</color>
+    <color name="warningContainer">#FDF2D0</color>
 
     <!-- Compatibility -->
     <color name="white">#FFFFFF</color>

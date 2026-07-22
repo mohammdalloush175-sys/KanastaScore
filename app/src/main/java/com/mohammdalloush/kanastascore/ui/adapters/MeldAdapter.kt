@@ -81,6 +81,24 @@ class MeldAdapter(
         setupTextWatcher(binding.etJokers) {
             melds[holder.adapterPosition] = melds[holder.adapterPosition].copy(jokersCount = it.toIntOrNull() ?: 0)
             onMeldChanged()
+            updateMeldPoints(binding, melds[holder.adapterPosition])
+        }
+
+        binding.actvRank.setOnItemClickListener { _, _, index, _ ->
+            melds[holder.adapterPosition] = melds[holder.adapterPosition].copy(rank = CardRank.entries[index])
+            onMeldChanged()
+            updateMeldPoints(binding, melds[holder.adapterPosition])
+        }
+
+        setupTextWatcher(binding.etNatural) { 
+            melds[holder.adapterPosition] = melds[holder.adapterPosition].copy(naturalCount = it.toIntOrNull() ?: 0)
+            onMeldChanged()
+            updateMeldPoints(binding, melds[holder.adapterPosition])
+        }
+        setupTextWatcher(binding.etTwos) {
+            melds[holder.adapterPosition] = melds[holder.adapterPosition].copy(twosCount = it.toIntOrNull() ?: 0)
+            onMeldChanged()
+            updateMeldPoints(binding, melds[holder.adapterPosition])
         }
 
         updateMeldPoints(binding, meld)

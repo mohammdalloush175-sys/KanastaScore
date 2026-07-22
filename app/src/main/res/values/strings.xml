@@ -21,6 +21,12 @@
     <string name="no">إلغاء</string>
     <string name="team_1_label">الفريق الأول</string>
     <string name="team_2_label">الفريق الثاني</string>
+    <string name="developed_by">Developed by Mohammd Alloush</string>
+    <string name="theme_selection">إعداد المظهر</string>
+    <string name="theme_system">حسب النظام</string>
+    <string name="theme_light">الوضع النهاري</string>
+    <string name="theme_dark">الوضع الليلي</string>
+    <string name="error_same_team_names">يجب أن يكون اسما الفريقين مختلفين</string>
 
     <!-- Round Input -->
     <string name="round_number_label">الجولة %1$d</string>

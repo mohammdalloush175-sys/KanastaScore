@@ -5,7 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import com.mohammdalloush.kanastascore.MainActivity
 import com.mohammdalloush.kanastascore.R
@@ -26,6 +29,12 @@ class HistoryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val mainActivity = activity as MainActivity
         val viewModel = mainActivity.viewModel
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.toolbar) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.updatePadding(top = systemBars.top)
+            insets
+        }
 
         setupToolbar(mainActivity)
 
@@ -75,10 +84,17 @@ class HistoryFragment : Fragment() {
         }
         binding.toolbar.inflateMenu(R.menu.menu_history)
         binding.toolbar.setOnMenuItemClickListener {
-            if (it.itemId == R.id.action_new_match) {
-                showNewMatchDialog()
-                true
-            } else false
+            when (it.itemId) {
+                R.id.action_new_match -> {
+                    showNewMatchDialog()
+                    true
+                }
+                R.id.action_theme -> {
+                    (activity as MainActivity).showThemeSelectionDialog()
+                    true
+                }
+                else -> false
+            }
         }
     }
 
@@ -88,8 +104,7 @@ class HistoryFragment : Fragment() {
             .setMessage(R.string.confirm_new_match_message)
             .setPositiveButton(R.string.yes) { _, _ ->
                 val activity = activity as MainActivity
-                activity.viewModel.setGameState(null)
-                activity.viewModel.clearRoundDraft()
+                activity.viewModel.startNewMatch()
                 activity.replaceFragment(MatchSetupFragment())
             }
             .setNegativeButton(R.string.no, null)

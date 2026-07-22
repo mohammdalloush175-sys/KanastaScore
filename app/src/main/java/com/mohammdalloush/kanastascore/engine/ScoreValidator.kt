@@ -82,6 +82,10 @@ object ScoreValidator {
             return "لا يمكن للفريقين الخروج في نفس الجولة"
         }
 
+        if (team1.redThreesCount + team2.redThreesCount != 4) {
+            return "مجموع الثلاثات الحمراء للفريقين يجب أن يكون دائماً 4"
+        }
+
         return null
     }
 }

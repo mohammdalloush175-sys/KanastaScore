@@ -9,7 +9,10 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import com.mohammdalloush.kanastascore.MainActivity
 import com.mohammdalloush.kanastascore.R
@@ -34,6 +37,18 @@ class RoundInputFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        
+        ViewCompat.setOnApplyWindowInsetsListener(binding.toolbar) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.updatePadding(top = systemBars.top)
+            insets
+        }
+        ViewCompat.setOnApplyWindowInsetsListener(binding.bottomBar) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.updatePadding(bottom = systemBars.bottom)
+            insets
+        }
+
         val mainActivity = activity as MainActivity
         val viewModel = mainActivity.viewModel
 
@@ -56,12 +71,14 @@ class RoundInputFragment : Fragment() {
             }
         }
 
-        // Observe for exclusive exit
+        // Observe for exclusive changes
         viewModel.team1RoundInput.observe(viewLifecycleOwner) { 
             updateExitUI(binding.sectionTeam1, it, 0)
+            updateRedThreesUI(binding.sectionTeam1, it)
         }
         viewModel.team2RoundInput.observe(viewLifecycleOwner) {
             updateExitUI(binding.sectionTeam2, it, 1)
+            updateRedThreesUI(binding.sectionTeam2, it)
         }
     }
 
@@ -75,6 +92,10 @@ class RoundInputFragment : Fragment() {
                 }
                 R.id.action_new_match -> {
                     showNewMatchDialog()
+                    true
+                }
+                R.id.action_theme -> {
+                    (activity as MainActivity).showThemeSelectionDialog()
                     true
                 }
                 else -> false
@@ -191,7 +212,9 @@ class RoundInputFragment : Fragment() {
         sectionBinding.actvRedThrees.setAdapter(spinnerAdapter)
         sectionBinding.actvRedThrees.setText(initialInput.redThreesCount.toString(), false)
         sectionBinding.actvRedThrees.setOnItemClickListener { _, _, index, _ ->
-            inputLiveData.value = inputLiveData.value!!.copy(redThreesCount = index)
+            if (index != inputLiveData.value?.redThreesCount) {
+                viewModel.setRedThrees(teamIndex, index)
+            }
         }
 
         // Exit
@@ -229,6 +252,12 @@ class RoundInputFragment : Fragment() {
         } else {
             sectionBinding.switchExited.isEnabled = true
             sectionBinding.tvExitedHint.isVisible = false
+        }
+    }
+
+    private fun updateRedThreesUI(sectionBinding: LayoutTeamRoundInputBinding, input: TeamRoundInput) {
+        if (sectionBinding.actvRedThrees.text.toString() != input.redThreesCount.toString()) {
+            sectionBinding.actvRedThrees.setText(input.redThreesCount.toString(), false)
         }
     }
 
