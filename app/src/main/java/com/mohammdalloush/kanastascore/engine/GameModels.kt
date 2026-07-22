@@ -68,6 +68,7 @@ data class TeamRoundInput(
     val melds: List<MeldInput> = emptyList(),
     val directInput: DirectMeldScoreInput = DirectMeldScoreInput(),
     val redThreesCount: Int = 0,
+    val isRedThreesManual: Boolean = false,
     val exited: Boolean = false,
     val remainingPoints: Int = 0
 )

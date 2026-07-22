@@ -60,6 +60,11 @@
     <string name="joker_cards">جوكير</string>
     <string name="canasta_type">نوع الكنستا</string>
     <string name="red_threes">الثلاثات الحمراء</string>
+    <string name="red_threes_suggested">مقترح تلقائياً</string>
+    <string name="red_threes_manual">معدل يدويًا</string>
+    <string name="red_threes_helper">يُقترح عدد الفريق الآخر تلقائياً، ويمكن تعديله إذا لم تظهر كل الثلاثات.</string>
+    <string name="error_red_threes_sum">لا يمكن أن يتجاوز مجموع الثلاثات الحمراء للفريقين أربع ثلاثات.</string>
+    <string name="reset_label">إعادة ضبط</string>
     <string name="exited_label">إنهاء الجولة (الفتوح)</string>
     <string name="team_exited_hint">أنهى %1$s الجولة</string>
     <string name="remaining_points">أوراق اليد (الحرق)</string>

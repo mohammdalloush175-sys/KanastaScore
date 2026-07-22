@@ -204,13 +204,26 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical">
-                <TextView
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/red_threes"
-                    style="@style/TextAppearance.Material3.LabelLarge"
-                    android:textColor="@color/onSurface"/>
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/red_threes"
+                        style="@style/TextAppearance.Material3.LabelLarge"
+                        android:textColor="@color/onSurface"/>
+                    <TextView
+                        android:id="@+id/tv_red_threes_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_10"
+                        android:textColor="@color/onSurfaceVariant"
+                        android:alpha="0.6"
+                        tools:text="@string/red_threes_suggested"/>
+                </LinearLayout>
 
                 <com.google.android.material.button.MaterialButtonToggleGroup
                     android:id="@+id/toggle_group_threes"
@@ -276,6 +289,16 @@
                         android:layout_height="0dp"/>
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_red_threes_helper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_4"
+                android:text="@string/red_threes_helper"
+                android:textSize="@dimen/text_10"
+                android:textColor="@color/onSurfaceVariant"
+                android:alpha="0.5"/>
 
             <com.google.android.material.switchmaterial.SwitchMaterial
                 android:id="@+id/switch_exited"

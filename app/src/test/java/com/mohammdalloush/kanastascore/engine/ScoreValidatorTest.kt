@@ -38,9 +38,9 @@ class ScoreValidatorTest {
         val team1 = TeamRoundInput(redThreesCount = 2, directInput = DirectMeldScoreInput(redCanastasCount = 1))
         val team2 = TeamRoundInput(redThreesCount = 1, directInput = DirectMeldScoreInput(redCanastasCount = 1))
         
-        assertNotNull(ScoreValidator.validateRound(team1, team2)) // Sum is 3
+        assertNull(ScoreValidator.validateRound(team1, team2)) // Sum is 3, now valid
         
-        val team2Ok = TeamRoundInput(redThreesCount = 2, directInput = DirectMeldScoreInput(redCanastasCount = 1))
-        assertNull(ScoreValidator.validateRound(team1, team2Ok)) // Sum is 4
+        val team2TooMany = TeamRoundInput(redThreesCount = 3, directInput = DirectMeldScoreInput(redCanastasCount = 1))
+        assertNotNull(ScoreValidator.validateRound(team1, team2TooMany)) // Sum is 5, invalid
     }
 }

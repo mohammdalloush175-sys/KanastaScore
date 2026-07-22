@@ -25,4 +25,6 @@
     <dimen name="text_12">12sp</dimen>
     <dimen name="text_10">10sp</dimen>
     <dimen name="text_huge">32sp</dimen>
+
+    <dimen name="container_margin_horizontal">0dp</dimen>
 </resources>

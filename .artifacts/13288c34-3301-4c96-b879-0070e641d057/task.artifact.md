@@ -1,30 +1,21 @@
-# Task List - KanastaScore Enhancements
+# Task List - Red Threes Flex & UI Responsiveness
 
-- [x] Phase 1: Round Review, Duplicate Prevention & Undo
-    - [x] Update `GameViewModel` with Undo and Recording state
-    - [x] Redesign `ResultFragment` layout for detailed breakdown
-    - [x] Update `ResultFragment` logic for review and recording
-    - [x] Implement Undo Snackbar in `RoundInputFragment`
-- [x] Phase 2: Input Shortcuts & Summary UI
-    - [x] Add shortcut buttons to `layout_team_round_input.xml`
-    - [x] Update `RoundInputFragment` with shortcut logic
-    - [x] Add sticky summary to `fragment_round_input.xml`
-- [x] Phase 3: Match End, Re-match & Optional Naming
-    - [x] Add optional match name to `MatchSetupFragment`
-    - [x] Create `MatchEndFragment` and layout
-    - [x] Implement Re-match logic in `GameViewModel`
-- [x] Phase 4: Sharing Result as Image
-    - [x] Create `layout_share_card.xml`
-    - [x] Set up `FileProvider` and `file_paths.xml`
-    - [x] Implement sharing logic in `MainActivity` or utility
-- [x] Phase 5: Backup & Restore
-    - [x] Update `StorageHelper` for JSON export/import
-    - [x] Create `SettingsFragment` for data management
-- [x] Phase 6: Statistics, Rules & UI Cleanup
-    - [x] Create `StatisticsFragment` and calculator
-    - [x] Create `RulesFragment`
-    - [x] Update `MatchesFragment` for active/completed grouping
-- [x] Final Verification
-    - [x] Run `testDebugUnitTest`
-    - [x] Run `lintDebug`
-    - [x] Run `assembleDebug`
+- [ ] Phase 1: Red Threes Logic & Engine Updates
+    - [ ] Update `TeamRoundInput` in `GameModels.kt`
+    - [ ] Update `setRedThrees` logic in `GameViewModel.kt`
+    - [ ] Update `ScoreValidator.kt` validation rule
+- [ ] Phase 2: UI Updates for Red Threes
+    - [ ] Add new strings to `strings.xml`
+    - [ ] Update `layout_team_round_input.xml` with badges
+    - [ ] Update `RoundInputFragment.kt` logic
+- [ ] Phase 3: Layout Responsiveness & Insets
+    - [ ] Audit and fix hardcoded sizes in all layouts
+    - [ ] Create `res/values-sw600dp/dimens.xml`
+    - [ ] Create `res/layout-land/fragment_round_input.xml`
+    - [ ] Verify Window Insets in `MainActivity.kt`
+- [ ] Phase 4: Verification & Build
+    - [ ] Add Unit Tests for new rule
+    - [ ] Run `./gradlew testDebugUnitTest`
+    - [ ] Run `./gradlew lintDebug`
+    - [ ] Run `./gradlew assembleDebug`
+    - [ ] Run `./gradlew assembleRelease`

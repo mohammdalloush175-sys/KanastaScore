@@ -64,10 +64,12 @@ class RoundInputFragment : Fragment() {
         viewModel.team1RoundInput.observe(viewLifecycleOwner) { 
             updateExitUI(binding.sectionTeam1, it, 0)
             updateRedThreesUI(binding.sectionTeam1, it)
+            validateCurrentInputs()
         }
         viewModel.team2RoundInput.observe(viewLifecycleOwner) {
             updateExitUI(binding.sectionTeam2, it, 1)
             updateRedThreesUI(binding.sectionTeam2, it)
+            validateCurrentInputs()
         }
 
         viewModel.lastRecordedRoundNumber.observe(viewLifecycleOwner) { roundNumber ->
@@ -269,6 +271,27 @@ class RoundInputFragment : Fragment() {
 
     private fun updateRedThreesUI(sectionBinding: LayoutTeamRoundInputBinding, input: TeamRoundInput) {
         updateThreesToggle(sectionBinding, input.redThreesCount)
+        sectionBinding.tvRedThreesStatus.text = if (input.isRedThreesManual) {
+            getString(R.string.red_threes_manual)
+        } else {
+            getString(R.string.red_threes_suggested)
+        }
+    }
+
+    private fun validateCurrentInputs() {
+        val viewModel = (activity as MainActivity).viewModel
+        val t1 = viewModel.team1RoundInput.value ?: return
+        val t2 = viewModel.team2RoundInput.value ?: return
+        
+        val error = ScoreValidator.validateRound(t1, t2)
+        if (error != null && error.contains(getString(R.string.error_red_threes_sum))) {
+            binding.btnPreview.isEnabled = false
+            binding.tvErrorMsg.isVisible = true
+            binding.tvErrorMsg.text = error
+        } else {
+            binding.btnPreview.isEnabled = true
+            binding.tvErrorMsg.isVisible = false
+        }
     }
 
     private fun updateThreesToggle(sectionBinding: LayoutTeamRoundInputBinding, count: Int) {

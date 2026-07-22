@@ -127,12 +127,32 @@ class GameViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
     fun setRedThrees(teamIndex: Int, count: Int) {
         val safeCount = count.coerceIn(0, 4)
         if (teamIndex == 0) {
-            team1RoundInput.value = team1RoundInput.value?.copy(redThreesCount = safeCount)
-            team2RoundInput.value = team2RoundInput.value?.copy(redThreesCount = 4 - safeCount)
+            val t1 = team1RoundInput.value ?: TeamRoundInput()
+            val t2 = team2RoundInput.value ?: TeamRoundInput()
+            
+            team1RoundInput.value = t1.copy(redThreesCount = safeCount, isRedThreesManual = true)
+            
+            // Suggest for Team 2 only if it's not manually edited
+            if (!t2.isRedThreesManual) {
+                team2RoundInput.value = t2.copy(redThreesCount = 4 - safeCount, isRedThreesManual = false)
+            }
         } else {
-            team2RoundInput.value = team2RoundInput.value?.copy(redThreesCount = safeCount)
-            team1RoundInput.value = team1RoundInput.value?.copy(redThreesCount = 4 - safeCount)
+            val t1 = team1RoundInput.value ?: TeamRoundInput()
+            val t2 = team2RoundInput.value ?: TeamRoundInput()
+            
+            team2RoundInput.value = t2.copy(redThreesCount = safeCount, isRedThreesManual = true)
+            
+            // Suggest for Team 1 only if it's not manually edited
+            if (!t1.isRedThreesManual) {
+                team1RoundInput.value = t1.copy(redThreesCount = 4 - safeCount, isRedThreesManual = false)
+            }
         }
+        saveCurrentDraft()
+    }
+
+    fun resetRedThrees() {
+        team1RoundInput.value = team1RoundInput.value?.copy(redThreesCount = 0, isRedThreesManual = false)
+        team2RoundInput.value = team2RoundInput.value?.copy(redThreesCount = 0, isRedThreesManual = false)
         saveCurrentDraft()
     }
 

@@ -134,11 +134,23 @@
         android:id="@+id/bottom_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:padding="@dimen/spacing_16"
         android:background="@color/surface"
         android:elevation="@dimen/header_elevation"
         app:layout_constraintBottom_toBottomOf="parent">
+
+        <TextView
+            android:id="@+id/tv_error_msg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/negativeScore"
+            android:textSize="@dimen/text_12"
+            android:gravity="center"
+            android:layout_marginBottom="@dimen/spacing_8"
+            android:visibility="gone"
+            tools:text="خطأ في المجموع"
+            tools:visibility="visible"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_preview"

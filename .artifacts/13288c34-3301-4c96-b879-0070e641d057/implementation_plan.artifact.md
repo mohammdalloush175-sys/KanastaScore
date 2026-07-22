@@ -1,94 +1,83 @@
-# Implementation Plan - Completing KanastaScore Features
+# Implementation Plan - Red Threes Flex Rule & UI Responsiveness
 
-This plan outlines the steps to add advanced features to the KanastaScore app, including detailed round reviews, undo functionality, input shortcuts, match end statistics, sharing results as images, backup/restore, and a statistics dashboard.
+This plan covers updating the Red Threes rule to allow totals less than 4 with smart suggestions, and a comprehensive review of the UI to ensure it works perfectly across all screen sizes and orientations.
 
 ## User Review Required
 
 > [!IMPORTANT]
-> The "Undo" functionality will be available via a Snackbar immediately after recording a round. Once the Snackbar disappears or a new action is taken, the round can still be edited or deleted from the history screen as before.
+> The Red Threes sum check will now be `<=` instead of `==`. This allows scenarios where not all Red Threes have appeared before the round ended.
 
 > [!NOTE]
-> Backup and Restore will use the System File Picker (SAF) to ensure no broad storage permissions are required.
+> We will add "Manual" vs "Auto" tracking for Red Threes to provide helpful suggestions without overwriting user intentions.
 
 ## Proposed Changes
 
-### 1. Round Review & Recording Flow [Phase 1]
+### 1. Red Threes Logic & Engine Updates
 
-#### [MODIFY] [ScoreBreakdown](file:///home/mohammd/Workspace/Android/kanastaScore/app/src/main/java/com/mohammdalloush/kanastascore/engine/GameModels.kt)
-- Ensure all components of the score (red canasta count, black canasta count, etc.) are available for the detailed breakdown UI.
+#### [MODIFY] [GameModels.kt](file:///home/mohammd/Workspace/Android/kanastaScore/app/src/main/java/com/mohammdalloush/kanastascore/engine/GameModels.kt)
+- Add `isRedThreesManual: Boolean = false` to `TeamRoundInput` to track user interaction.
 
-#### [MODIFY] [ResultFragment](file:///home/mohammd/Workspace/Android/kanastaScore/app/src/main/java/com/mohammdalloush/kanastascore/ui/ResultFragment.kt)
-- Redesign UI to show a table-like breakdown for both teams.
-- Use green for additions (+), red for subtractions (-).
-- Show a "No Canasta" warning card if applicable.
-- Add "Record Round" with duplicate prevention (disabling button and ID check).
-- Add "Back to Edit" button.
+#### [MODIFY] [GameViewModel.kt](file:///home/mohammd/Workspace/Android/kanastaScore/app/src/main/java/com/mohammdalloush/kanastascore/viewmodel/GameViewModel.kt)
+- Update `setRedThrees` to:
+    1. Mark the target team as manual.
+    2. If the other team is still "Auto", update its value to `4 - selectedCount`.
+- Add `resetRedThrees()` to clear manual flags and reset both to 0.
 
-#### [MODIFY] [GameViewModel](file:///home/mohammd/Workspace/Android/kanastaScore/app/src/main/java/com/mohammdalloush/kanastascore/viewmodel/GameViewModel.kt)
-- Add `undoLastRound()` logic to remove the last round and restore the draft.
-- Add state to track if a round is currently being recorded to prevent duplicates.
+#### [MODIFY] [ScoreValidator.kt](file:///home/mohammd/Workspace/Android/kanastaScore/app/src/main/java/com/mohammdalloush/kanastascore/engine/ScoreValidator.kt)
+- Change sum check from `== 4` to `<= 4`.
+- Ensure error message is user-friendly.
 
-### 2. Input Enhancements & Shortcuts [Phase 2]
+---
+
+### 2. UI Updates for Red Threes
+
+#### [MODIFY] [strings.xml](file:///home/mohammd/Workspace/Android/kanastaScore/app/src/main/res/values/strings.xml)
+- Add labels for "Auto-suggested", "Manually edited", and the sum error.
+- Add helper text explaining the suggestion logic.
 
 #### [MODIFY] [layout_team_round_input.xml](file:///home/mohammd/Workspace/Android/kanastaScore/app/src/main/res/layout/layout_team_round_input.xml)
-- Add horizontal button groups for quick score entry (+50, +100, +200, Clear).
-- Add similar buttons for "Remaining Points" (Burning).
-- Add +/- buttons for Canasta counts.
+- Add a status badge (TextView) next to "Red Threes" label.
+- Add helper text below the toggle group.
 
-#### [MODIFY] [RoundInputFragment](file:///home/mohammd/Workspace/Android/kanastaScore/app/src/main/java/com/mohammdalloush/kanastascore/ui/RoundInputFragment.kt)
-- Implement logic for shortcut buttons.
-- Implement Snackbar with "Undo" action after recording a round.
+#### [MODIFY] [RoundInputFragment.kt](file:///home/mohammd/Workspace/Android/kanastaScore/app/src/main/java/com/mohammdalloush/kanastascore/ui/RoundInputFragment.kt)
+- Implement badge visibility logic.
+- Dynamically enable/disable the "Preview Result" button based on validation.
 
-#### [MODIFY] [fragment_round_input.xml](file:///home/mohammd/Workspace/Android/kanastaScore/app/src/main/res/layout/fragment_round_input.xml)
-- Add a sticky summary card at the top showing current total scores and target score.
+---
 
-### 3. Match End & Re-match [Phase 3]
+### 3. Comprehensive Layout Responsiveness
 
-#### [NEW] [MatchEndFragment](file:///home/mohammd/Workspace/Android/kanastaScore/app/src/main/java/com/mohammdalloush/kanastascore/ui/MatchEndFragment.kt)
-- Display winner, final scores, and match statistics (total rounds, canastas, max round score).
-- Buttons: Re-match with same teams, New Match, View History, Share Result.
+#### [REVIEW & FIX] All Layouts
+- **Scrollability:** Ensure `NestedScrollView` wraps content in all fragments.
+- **Fixed Sizes:** Replace fixed `layout_width` and `layout_height` (except icons) with `match_parent`, `0dp`, or `wrap_content`.
+- **ConstraintLayout:** Fix any missing constraints or inefficient nesting.
+- **Font Scaling:** Test with `2.0x` font size and ensure text doesn't overflow or overlap.
 
-#### [MODIFY] [GameViewModel](file:///home/mohammd/Workspace/Android/kanastaScore/app/src/main/java/com/mohammdalloush/kanastascore/viewmodel/GameViewModel.kt)
-- Add `reMatch()` to create a new match copying team names and target score.
+#### [NEW] [dimens-sw600dp.xml](file:///home/mohammd/Workspace/Android/kanastaScore/app/src/main/res/values-sw600dp/dimens.xml)
+- Adjust spacings and text sizes for tablets.
 
-### 4. Sharing Result as Image [Phase 4]
+#### [NEW] [layout-land/fragment_round_input.xml](file:///home/mohammd/Workspace/Android/kanastaScore/app/src/main/res/layout-land/fragment_round_input.xml)
+- Optimize round input for horizontal orientation (possibly side-by-side teams).
 
-#### [NEW] [layout_share_card.xml](file:///home/mohammd/Workspace/Android/kanastaScore/app/src/main/res/layout/layout_share_card.xml)
-- A clean, branded layout for the shareable image.
+#### [MODIFY] [MainActivity.kt](file:///home/mohammd/Workspace/Android/kanastaScore/app/src/main/java/com/mohammdalloush/kanastascore/MainActivity.kt)
+- Double-check Window Insets implementation for notched devices and gesture navigation.
 
-#### [MODIFY] [MainActivity](file:///home/mohammd/Workspace/Android/kanastaScore/app/src/main/java/com/mohammdalloush/kanastascore/MainActivity.kt)
-- Set up `FileProvider` in manifest and provide a utility method to share Bitmaps.
-
-### 5. Backup, Restore & Data Management [Phase 5]
-
-#### [MODIFY] [StorageHelper](file:///home/mohammd/Workspace/Android/kanastaScore/app/src/main/java/com/mohammdalloush/kanastascore/utils/StorageHelper.kt)
-- Add methods to export `MatchesStore` to JSON string and import from JSON string.
-- Support "Merge" and "Replace" modes.
-
-#### [NEW] [SettingsFragment](file:///home/mohammd/Workspace/Android/kanastaScore/app/src/main/java/com/mohammdalloush/kanastascore/ui/SettingsFragment.kt)
-- Options for Theme, Backup/Restore, Statistics, Rules, and "Delete All Data".
-
-### 6. Statistics & Rules [Phase 6]
-
-#### [NEW] [StatisticsFragment](file:///home/mohammd/Workspace/Android/kanastaScore/app/src/main/java/com/mohammdalloush/kanastascore/ui/StatisticsFragment.kt)
-- Calculate and display global stats (total matches, rounds, canastas).
-- Show team-specific stats for recurring team names.
-
-#### [NEW] [RulesFragment](file:///home/mohammd/Workspace/Android/kanastaScore/app/src/main/java/com/mohammdalloush/kanastascore/ui/RulesFragment.kt)
-- Scrollable text view explaining the scoring system and rules.
+---
 
 ## Verification Plan
 
 ### Automated Tests
-- `ScoreCalculatorTest`: Verify detailed breakdown components.
-- `GameViewModelTest`: Test Undo logic and Re-match logic.
-- `StorageHelperTest`: Test JSON export/import (Merge vs Replace).
-- `StatisticsCalculatorTest`: Verify stats calculation from a sample `MatchesStore`.
+- Add unit tests in `ScoreValidatorTest` for:
+    - Sum < 4 (Valid).
+    - Sum == 4 (Valid).
+    - Sum > 4 (Invalid).
+    - Negative or > 4 per team (Invalid).
+- Add `GameViewModelTest` for auto-suggestion logic.
 
 ### Manual Verification
-- Verify the "Undo" Snackbar appears and works after recording a round.
-- Test "Re-match" preserves team names and starts at Round 1.
-- Share a result and verify the generated image looks correct.
-- Export backup, clear data, and import backup to verify data integrity.
-- Verify RTL support in all new screens.
-- Check Day/Night mode transitions.
+1.  **Red Threes:** Change Team 1 to 3 -> Team 2 should become 1 (Auto). Change Team 2 to 0 -> Team 2 should become 0 (Manual).
+2.  **Small Screen:** Run on 320dp device (e.g. Jelly Bean style emulator or small Pixel).
+3.  **Tablet:** Run on 10-inch tablet emulator.
+4.  **Landscape:** Flip device in all major screens.
+5.  **Large Font:** Set system font to Largest and check for layout breaks.
+6.  **Lint:** Run `./gradlew lintDebug` and resolve layout warnings.
