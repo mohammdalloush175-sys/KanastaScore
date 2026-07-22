@@ -15,6 +15,10 @@ enum class CanastaType {
     RED, BLACK
 }
 
+enum class MeldScoringMode {
+    DETAILED, DIRECT_TOTAL
+}
+
 data class MeldInput(
     val id: String = UUID.randomUUID().toString(),
     val rank: CardRank,
@@ -24,8 +28,16 @@ data class MeldInput(
     val canastaType: CanastaType? = null
 )
 
+data class DirectMeldScoreInput(
+    val totalMeldPoints: Int = 0,
+    val redCanastasCount: Int = 0,
+    val blackCanastasCount: Int = 0
+)
+
 data class TeamRoundInput(
+    val scoringMode: MeldScoringMode = MeldScoringMode.DETAILED,
     val melds: List<MeldInput> = emptyList(),
+    val directInput: DirectMeldScoreInput = DirectMeldScoreInput(),
     val redThreesCount: Int = 0,
     val exited: Boolean = false,
     val remainingPoints: Int = 0
@@ -57,5 +69,5 @@ data class GameState(
     val teams: List<Team>,
     val targetScore: Int = 5000,
     val rounds: List<RoundRecord> = emptyList(),
-    val schemaVersion: Int = 1
+    val schemaVersion: Int = 2
 )

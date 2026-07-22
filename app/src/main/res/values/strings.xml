@@ -2,28 +2,36 @@
     <string name="app_name">KanastaScore</string>
 
     <!-- Match Setup -->
-    <string name="match_setup_title">إعداد المباراة</string>
+    <string name="match_setup_title">حساب نتائج الكنستا</string>
     <string name="match_setup_description">أدخل أسماء اللاعبين وحدد هدف المباراة</string>
-    <string name="team_1_label">الفريق الأول</string>
-    <string name="team_2_label">الفريق الثاني</string>
-    <string name="player_1">اللاعب 1</string>
-    <string name="player_2">اللاعب 2</string>
-    <string name="player_3">اللاعب 3</string>
-    <string name="player_4">اللاعب 4</string>
+    <string name="player_1">اللاعب 1 (فريق 1)</string>
+    <string name="player_2">اللاعب 2 (فريق 2)</string>
+    <string name="player_3">اللاعب 3 (فريق 1)</string>
+    <string name="player_4">اللاعب 4 (فريق 2)</string>
     <string name="team_1_name">اسم الفريق 1 (اختياري)</string>
     <string name="team_2_name">اسم الفريق 2 (اختياري)</string>
     <string name="target_score_label">السكور النهائي المستهدف</string>
     <string name="start_match">بدء المباراة</string>
     <string name="continue_match">متابعة المباراة الحالية</string>
-    <string name="new_match">بدء مباراة جديدة</string>
+    <string name="new_match">مباراة جديدة</string>
+    <string name="confirm_new_match_title">بدء مباراة جديدة؟</string>
+    <string name="confirm_new_match_message">سيتم إنهاء المباراة الحالية ومسح الجولات والمدخلات غير المسجلة، ثم العودة إلى شاشة إعداد اللاعبين.</string>
     <string name="confirm_new_game">بدء مباراة جديدة سيؤدي لحذف الحالية. هل أنت متأكد؟</string>
-    <string name="yes">نعم</string>
-    <string name="no">لا</string>
+    <string name="yes">نعم، ابدأ</string>
+    <string name="no">إلغاء</string>
+    <string name="team_1_label">الفريق الأول</string>
+    <string name="team_2_label">الفريق الثاني</string>
 
     <!-- Round Input -->
     <string name="round_number_label">الجولة %1$d</string>
     <string name="target_score_info">الهدف: %1$d</string>
     <string name="min_points_info">حد التنزيل: %1$d</string>
+    <string name="scoring_mode_detailed">تفصيلي</string>
+    <string name="scoring_mode_direct">مجموع مباشر</string>
+    <string name="scoring_mode_description_detailed">أدخل كل باب وسيحسب التطبيق النقاط تلقائياً.</string>
+    <string name="scoring_mode_description_direct">أدخل مجموع نقاط الأبواب وعدد الكنستات فقط.</string>
+    <string name="no_melds_added">لم تتم إضافة أي باب بعد</string>
+    <string name="add_first_meld">إضافة أول باب</string>
     <string name="add_meld">إضافة باب</string>
     <string name="meld_rank">الرتبة</string>
     <string name="natural_cards">طبيعي</string>
@@ -31,18 +39,25 @@
     <string name="joker_cards">جوكير</string>
     <string name="canasta_type">نوع الكنستا</string>
     <string name="red_threes">الثلاثات الحمراء</string>
-    <string name="exited_label">خروج</string>
-    <string name="remaining_points">نقاط الحرق</string>
+    <string name="exited_label">إنهاء الجولة (الفتوح)</string>
+    <string name="team_exited_hint">أنهى %1$s الجولة</string>
+    <string name="remaining_points">أوراق اليد (الحرق)</string>
+    <string name="direct_meld_total">مجموع نقاط الأبواب</string>
+    <string name="red_canastas_count">عدد الكنستات الحمراء</string>
+    <string name="black_canastas_count">عدد الكنستات السوداء</string>
     <string name="preview_result">معاينة النتيجة</string>
     <string name="view_history">سجل الجولات</string>
     <string name="total_meld_points">مجموع نقاط الأبواب: %1$d</string>
     <string name="team_summary_header">%1$s: %2$d (حد: %3$d)</string>
+    <string name="team_name_score_label">%1$s: %2$d</string>
+    <string name="meld_points_label">%1$d نقطة</string>
     <string name="total_progression">المجموع: %1$d -> %2$d</string>
+    <string name="no_canasta_warning">لن يتم احتساب نقاط الأبواب لأن الفريق لا يملك كنستا.</string>
 
     <!-- Result -->
-    <string name="result_title">نتيجة الجولة</string>
+    <string name="result_title">نتيجة الجولة %1$d</string>
     <string name="record_round">تسجيل الجولة</string>
-    <string name="edit_round">تعديل</string>
+    <string name="edit_round">عودة للتعديل</string>
     <string name="previous_total">المجموع السابق: %1$d</string>
     <string name="new_total">المجموع الجديد: %1$d</string>
     <string name="winner_is">الفائز هو: %1$s!</string>
@@ -51,6 +66,8 @@
     <string name="history_title">سجل الجولات</string>
     <string name="round_item_title">جولة %1$d</string>
     <string name="delete_round_confirm">هل أنت متأكد من حذف هذه الجولة؟</string>
+    <string name="no_rounds_yet">لم يتم تسجيل أي جولة بعد</string>
+    <string name="back_to_round">العودة للجولة</string>
 
     <!-- Validation -->
     <string name="error_player_names_required">يجب إدخال أسماء جميع اللاعبين</string>

@@ -82,6 +82,14 @@ class MeldAdapter(
             melds[holder.adapterPosition] = melds[holder.adapterPosition].copy(jokersCount = it.toIntOrNull() ?: 0)
             onMeldChanged()
         }
+
+        updateMeldPoints(binding, meld)
+    }
+
+    private fun updateMeldPoints(binding: ItemMeldBinding, meld: MeldInput) {
+        val points = (meld.naturalCount * com.mohammdalloush.kanastascore.engine.ScoreCalculator.cardValue(meld.rank)) +
+                (meld.twosCount * 20) + (meld.jokersCount * 50)
+        binding.tvMeldPointsLabel.text = binding.root.context.getString(R.string.meld_points_label, points)
     }
 
     private fun setupTextWatcher(editText: android.widget.EditText, onTextChange: (String) -> Unit) {

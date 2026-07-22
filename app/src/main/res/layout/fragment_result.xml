@@ -14,15 +14,16 @@
         android:padding="@dimen/spacing_16">
 
         <TextView
+            android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/result_title"
             style="@style/TextAppearance.KanastaScore.Title"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/spacing_8"
-            android:layout_marginBottom="@dimen/spacing_24"/>
+            android:layout_marginBottom="@dimen/spacing_24"
+            tools:text="نتيجة الجولة 1"/>
 
-        <!-- Comparison Summary -->
+        <!-- Comparison Dashboard -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -46,14 +47,15 @@
                         android:id="@+id/tv_team1_summary_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/onPrimaryContainer"
+                        android:textColor="@color/onPrimary"
+                        android:alpha="0.8"
                         android:textStyle="bold"
                         tools:text="الفريق 1"/>
                     <TextView
                         android:id="@+id/tv_team1_round_total"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/primary"
+                        android:textColor="@color/onPrimary"
                         android:textSize="@dimen/text_huge"
                         android:textStyle="bold"
                         tools:text="+540"/>
@@ -62,7 +64,7 @@
                 <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
-                    android:background="@color/onPrimaryContainer"
+                    android:background="@color/onPrimary"
                     android:alpha="0.2"
                     android:layout_marginHorizontal="@dimen/spacing_8"/>
 
@@ -76,7 +78,8 @@
                         android:id="@+id/tv_team2_summary_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/onPrimaryContainer"
+                        android:textColor="@color/onPrimary"
+                        android:alpha="0.8"
                         android:textStyle="bold"
                         tools:text="الفريق 2"/>
                     <TextView
@@ -91,7 +94,7 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Team 1 Details -->
+        <!-- Team 1 Breakdown -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -135,7 +138,7 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Team 2 Details -->
+        <!-- Team 2 Breakdown -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -185,19 +188,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textColor="@color/secondary"
+            android:textColor="@color/onPrimary"
             android:textSize="@dimen/text_20"
             android:textStyle="bold"
-            android:layout_marginBottom="@dimen/spacing_16"
+            android:layout_marginBottom="@dimen/spacing_24"
             android:padding="@dimen/spacing_16"
-            android:background="@color/secondaryContainer"
-            android:visibility="gone"/>
+            android:background="@color/secondary"
+            android:visibility="gone"
+            tools:visibility="visible"
+            tools:text="الفائز هو الفريق الأول!"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_record"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/record_round"
+            android:padding="@dimen/spacing_16"
             app:icon="@android:drawable/ic_menu_save"/>
 
         <com.google.android.material.button.MaterialButton

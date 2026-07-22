@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.mohammdalloush.kanastascore.MainActivity
 import com.mohammdalloush.kanastascore.R
@@ -26,12 +27,15 @@ class HistoryFragment : Fragment() {
         val mainActivity = activity as MainActivity
         val viewModel = mainActivity.viewModel
 
+        setupToolbar(mainActivity)
+
         val state = viewModel.gameState.value
         if (state != null) {
             binding.tvTeam1Name.text = state.teams[0].name
             binding.tvTeam1Total.text = viewModel.getCumulativeScore(0).toString()
             binding.tvTeam2Name.text = state.teams[1].name
             binding.tvTeam2Total.text = viewModel.getCumulativeScore(1).toString()
+            binding.emptyState.isVisible = state.rounds.isEmpty()
         }
 
         val adapter = HistoryAdapter(
@@ -47,13 +51,49 @@ class HistoryFragment : Fragment() {
                     .setMessage(R.string.delete_round_confirm)
                     .setPositiveButton(R.string.yes) { _, _ ->
                         viewModel.deleteRound(round.id)
-                        (binding.rvHistory.adapter as HistoryAdapter).updateData(viewModel.gameState.value?.rounds ?: emptyList())
+                        val updatedRounds = viewModel.gameState.value?.rounds ?: emptyList()
+                        (binding.rvHistory.adapter as HistoryAdapter).updateData(updatedRounds)
+                        binding.emptyState.isVisible = updatedRounds.isEmpty()
+                        // Update summary
+                        binding.tvTeam1Total.text = viewModel.getCumulativeScore(0).toString()
+                        binding.tvTeam2Total.text = viewModel.getCumulativeScore(1).toString()
                     }
                     .setNegativeButton(R.string.no, null)
                     .show()
             }
         )
         binding.rvHistory.adapter = adapter
+
+        binding.btnBackToRound.setOnClickListener {
+            mainActivity.onBackPressedDispatcher.onBackPressed()
+        }
+    }
+
+    private fun setupToolbar(activity: MainActivity) {
+        binding.toolbar.setNavigationOnClickListener {
+            activity.onBackPressedDispatcher.onBackPressed()
+        }
+        binding.toolbar.inflateMenu(R.menu.menu_history)
+        binding.toolbar.setOnMenuItemClickListener {
+            if (it.itemId == R.id.action_new_match) {
+                showNewMatchDialog()
+                true
+            } else false
+        }
+    }
+
+    private fun showNewMatchDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.confirm_new_match_title)
+            .setMessage(R.string.confirm_new_match_message)
+            .setPositiveButton(R.string.yes) { _, _ ->
+                val activity = activity as MainActivity
+                activity.viewModel.setGameState(null)
+                activity.viewModel.clearRoundDraft()
+                activity.replaceFragment(MatchSetupFragment())
+            }
+            .setNegativeButton(R.string.no, null)
+            .show()
     }
 
     override fun onDestroyView() {

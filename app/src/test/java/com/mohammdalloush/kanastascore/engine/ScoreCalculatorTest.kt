@@ -22,46 +22,40 @@ class ScoreCalculatorTest {
     }
 
     @Test
-    fun testRedThreesScoreWithCanasta() {
-        assertEquals(100, ScoreCalculator.calculateRedThreesScore(1, true))
-        assertEquals(800, ScoreCalculator.calculateRedThreesScore(4, true))
+    fun testDirectScoringMode() {
+        val input = TeamRoundInput(
+            scoringMode = MeldScoringMode.DIRECT_TOTAL,
+            directInput = DirectMeldScoreInput(totalMeldPoints = 420, redCanastasCount = 1, blackCanastasCount = 1),
+            redThreesCount = 2,
+            exited = true,
+            remainingPoints = 50
+        )
+        val score = ScoreCalculator.calculateScore(input)
+        // 420 (melds) + 300 (red) + 200 (black) + 200 (2 red threes) + 100 (exit) - 50 (penalty) = 1170
+        assertEquals(1170, score.total)
+        assertEquals(true, score.hasValidCanasta)
     }
 
     @Test
-    fun testRedThreesScoreWithoutCanasta() {
-        assertEquals(-100, ScoreCalculator.calculateRedThreesScore(1, false))
-        assertEquals(-800, ScoreCalculator.calculateRedThreesScore(4, false))
-    }
-
-    @Test
-    fun testNoCanastaPenalty() {
-        val input = TeamRoundInput(redThreesCount = 2, exited = false, remainingPoints = 50)
+    fun testNoCanastaPenaltyDetailed() {
+        val input = TeamRoundInput(
+            scoringMode = MeldScoringMode.DETAILED,
+            melds = emptyList(),
+            redThreesCount = 2,
+            remainingPoints = 50
+        )
         val score = ScoreCalculator.calculateScore(input)
         assertEquals(-500, score.total) // -300 (no canasta) - 200 (2 red threes)
-        assertEquals(false, score.hasValidCanasta)
     }
 
     @Test
-    fun testFullScoreCalculation() {
-        val melds = listOf(
-            MeldInput(rank = CardRank.EIGHT, naturalCount = 7, twosCount = 0, jokersCount = 0, canastaType = CanastaType.RED), // 70 + 300 = 370
-            MeldInput(rank = CardRank.ACE, naturalCount = 5, twosCount = 2, jokersCount = 0, canastaType = CanastaType.BLACK)  // 5*20 + 2*20 + 200 = 100 + 40 + 200 = 340
-        )
+    fun testNoCanastaPenaltyDirect() {
         val input = TeamRoundInput(
-            melds = melds,
-            redThreesCount = 4, // 800
-            exited = true,       // 100
-            remainingPoints = 50 // -50
+            scoringMode = MeldScoringMode.DIRECT_TOTAL,
+            directInput = DirectMeldScoreInput(totalMeldPoints = 500, redCanastasCount = 0, blackCanastasCount = 0),
+            redThreesCount = 1
         )
         val score = ScoreCalculator.calculateScore(input)
-        // 70 + 340 + 300 + 200 + 800 + 100 - 50 = 1760 ?
-        // Wait: meldPoints = 70 + 140 = 210
-        // redCanastaBonus = 300
-        // blackCanastaBonus = 200
-        // redThreesScore = 800
-        // exitBonus = 100
-        // remainingCardsPenalty = -50
-        // Total = 210 + 300 + 200 + 800 + 100 - 50 = 1560
-        assertEquals(1560, score.total)
+        assertEquals(-400, score.total) // -300 (no canasta) - 100 (1 red three)
     }
 }

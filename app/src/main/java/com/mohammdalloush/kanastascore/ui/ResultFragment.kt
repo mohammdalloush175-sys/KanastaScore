@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.mohammdalloush.kanastascore.MainActivity
 import com.mohammdalloush.kanastascore.R
@@ -27,12 +28,16 @@ class ResultFragment : Fragment() {
         val viewModel = mainActivity.viewModel
         val state = viewModel.gameState.value ?: return
 
+        val nextRoundNumber = (state.rounds.maxByOrNull { it.roundNumber }?.roundNumber ?: 0) + 1
+        binding.tvTitle.text = getString(R.string.result_title, nextRoundNumber)
+
         val team1Input = viewModel.team1RoundInput.value!!
         val team2Input = viewModel.team2RoundInput.value!!
 
         val res1 = ScoreCalculator.calculateScore(team1Input)
         val res2 = ScoreCalculator.calculateScore(team2Input)
 
+        // Team 1 UI
         binding.tvTeam1Name.text = state.teams[0].name
         binding.tvTeam1SummaryName.text = state.teams[0].name
         binding.tvTeam1RoundTotal.text = (if (res1.total >= 0) "+" else "") + res1.total.toString()
@@ -41,10 +46,10 @@ class ResultFragment : Fragment() {
             else requireContext().getColor(R.color.negativeScore)
         )
         binding.tvTeam1ResultDetails.text = res1.details.joinToString("\n")
-        
         val prev1 = viewModel.getCumulativeScore(0)
         binding.tvTeam1Progression.text = getString(R.string.total_progression, prev1, prev1 + res1.total)
 
+        // Team 2 UI
         binding.tvTeam2Name.text = state.teams[1].name
         binding.tvTeam2SummaryName.text = state.teams[1].name
         binding.tvTeam2RoundTotal.text = (if (res2.total >= 0) "+" else "") + res2.total.toString()
@@ -53,7 +58,6 @@ class ResultFragment : Fragment() {
             else requireContext().getColor(R.color.negativeScore)
         )
         binding.tvTeam2ResultDetails.text = res2.details.joinToString("\n")
-
         val prev2 = viewModel.getCumulativeScore(1)
         binding.tvTeam2Progression.text = getString(R.string.total_progression, prev2, prev2 + res2.total)
 
@@ -69,12 +73,11 @@ class ResultFragment : Fragment() {
         }
 
         binding.btnEdit.setOnClickListener {
-            mainActivity.onBackPressed()
+            mainActivity.onBackPressedDispatcher.onBackPressed()
         }
 
         binding.btnRecord.setOnClickListener {
             binding.btnRecord.isEnabled = false
-            val nextRoundNumber = (state.rounds.maxByOrNull { it.roundNumber }?.roundNumber ?: 0) + 1
             val record = RoundRecord(
                 id = viewModel.editingRoundId.value ?: java.util.UUID.randomUUID().toString(),
                 roundNumber = nextRoundNumber,

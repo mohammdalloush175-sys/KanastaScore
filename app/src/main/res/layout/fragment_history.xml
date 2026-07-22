@@ -6,31 +6,31 @@
     android:layout_height="match_parent"
     android:background="@color/background">
 
-    <TextView
-        android:id="@+id/tv_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/history_title"
-        style="@style/TextAppearance.KanastaScore.Title"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="@dimen/spacing_16"/>
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/background"
+        app:navigationIcon="@android:drawable/ic_menu_revert"
+        app:title="@string/history_title"
+        app:titleTextAppearance="@style/TextAppearance.KanastaScore.Title"
+        app:layout_constraintTop_toTopOf="parent"/>
 
-    <!-- Current Totals Card -->
+    <!-- Summary Header -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/summary_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/spacing_16"
-        app:cardBackgroundColor="@color/surface"
-        app:layout_constraintTop_toBottomOf="@id/tv_title">
+        android:layout_marginHorizontal="@dimen/spacing_12"
+        android:layout_marginVertical="@dimen/spacing_8"
+        app:cardBackgroundColor="@color/surfaceVariant"
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="@dimen/spacing_12"
+            android:padding="@dimen/spacing_16"
             android:gravity="center">
 
             <LinearLayout
@@ -50,7 +50,7 @@
                     android:id="@+id/tv_team1_total"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/text_20"
+                    android:textSize="@dimen/text_24"
                     android:textStyle="bold"
                     android:textColor="@color/primary"
                     tools:text="2450"/>
@@ -58,7 +58,7 @@
 
             <View
                 android:layout_width="1dp"
-                android:layout_height="32dp"
+                android:layout_height="40dp"
                 android:background="@color/divider"
                 android:layout_marginHorizontal="@dimen/spacing_16"/>
 
@@ -79,7 +79,7 @@
                     android:id="@+id/tv_team2_total"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/text_20"
+                    android:textSize="@dimen/text_24"
                     android:textStyle="bold"
                     android:textColor="@color/secondary"
                     tools:text="1800"/>
@@ -95,7 +95,34 @@
         app:layout_constraintTop_toBottomOf="@id/summary_card"
         app:layout_constraintBottom_toBottomOf="parent"
         android:clipToPadding="false"
-        android:padding="@dimen/spacing_8"
+        android:paddingBottom="@dimen/spacing_32"
         tools:listitem="@layout/item_history_round"/>
+
+    <LinearLayout
+        android:id="@+id/empty_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/summary_card">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no_rounds_yet"
+            android:textColor="@color/onSurfaceVariant"
+            android:layout_marginBottom="@dimen/spacing_16"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_back_to_round"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/back_to_round"/>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

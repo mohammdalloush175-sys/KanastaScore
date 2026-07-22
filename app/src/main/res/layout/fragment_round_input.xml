@@ -6,16 +6,25 @@
     android:layout_height="match_parent"
     android:background="@color/background">
 
-    <!-- Header Card -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/background"
+        app:titleCentered="true"
+        app:titleTextAppearance="@style/TextAppearance.KanastaScore.Title"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:title="الجولة 1"/>
+
+    <!-- Round Summary Card -->
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/header_card"
+        android:id="@+id/summary_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/spacing_8"
-        app:cardBackgroundColor="@color/primary"
-        app:cardCornerRadius="@dimen/chip_corner_radius"
-        app:cardElevation="@dimen/header_elevation"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_marginHorizontal="@dimen/spacing_12"
+        android:layout_marginVertical="@dimen/spacing_8"
+        app:cardBackgroundColor="@color/surfaceVariant"
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -26,55 +35,67 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
-                <TextView
-                    android:id="@+id/tv_round_number"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textColor="@color/onPrimary"
-                    android:textStyle="bold"
-                    android:textSize="@dimen/text_18"
-                    tools:text="الجولة 1"/>
-                <TextView
-                    android:id="@+id/tv_target_score"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/onPrimary"
-                    android:alpha="0.8"
-                    tools:text="الهدف: 5000"/>
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/onPrimary"
-                android:alpha="0.2"
-                android:layout_marginVertical="@dimen/spacing_8"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:orientation="horizontal">
-                <TextView
-                    android:id="@+id/tv_team1_total"
+
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textColor="@color/onPrimary"
-                    android:textSize="@dimen/text_14"
-                    tools:text="الفريق 1: 1200 (حد: 90)"/>
-                <TextView
-                    android:id="@+id/tv_team2_total"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/tv_team1_summary"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        android:textColor="@color/primary"
+                        tools:text="الفريق 1: 1200"/>
+                    <TextView
+                        android:id="@+id/tv_team1_min"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_12"
+                        android:textColor="@color/onSurfaceVariant"
+                        tools:text="حد التنزيل: 90"/>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/divider"
+                    android:layout_marginHorizontal="@dimen/spacing_8"/>
+
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textColor="@color/onPrimary"
-                    android:textSize="@dimen/text_14"
-                    android:gravity="end"
-                    tools:text="الفريق 2: 850 (حد: 50)"/>
+                    android:orientation="vertical"
+                    android:gravity="end">
+                    <TextView
+                        android:id="@+id/tv_team2_summary"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        android:textColor="@color/secondary"
+                        tools:text="الفريق 2: 850"/>
+                    <TextView
+                        android:id="@+id/tv_team2_min"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_12"
+                        android:textColor="@color/onSurfaceVariant"
+                        tools:text="حد التنزيل: 50"/>
+                </LinearLayout>
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_target_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/spacing_4"
+                android:textSize="@dimen/text_12"
+                android:textColor="@color/onSurfaceVariant"
+                tools:text="هدف المباراة: 5000"/>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
@@ -82,14 +103,14 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
-        app:layout_constraintTop_toBottomOf="@id/header_card"
+        app:layout_constraintTop_toBottomOf="@id/summary_card"
         app:layout_constraintBottom_toTopOf="@id/bottom_bar">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="@dimen/spacing_8">
+            android:padding="@dimen/spacing_12">
 
             <!-- Team 1 Section -->
             <include
@@ -100,8 +121,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:background="@color/divider"
-                android:layout_marginVertical="@dimen/spacing_24"
-                android:layout_marginHorizontal="@dimen/spacing_32"/>
+                android:layout_marginVertical="@dimen/spacing_32"
+                android:layout_marginHorizontal="@dimen/spacing_24"/>
 
             <!-- Team 2 Section -->
             <include
@@ -119,27 +140,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="@dimen/spacing_12"
+        android:padding="@dimen/spacing_16"
         android:background="@color/surface"
         android:elevation="@dimen/header_elevation"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_history"
-            style="@style/Widget.Material3.Button.OutlinedButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/view_history"
-            android:layout_marginEnd="@dimen/spacing_8"
-            app:icon="@android:drawable/ic_menu_recent_history"/>
-
-        <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_preview"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:text="@string/preview_result"
+            android:padding="@dimen/spacing_16"
             app:icon="@android:drawable/ic_menu_send"/>
     </LinearLayout>
 

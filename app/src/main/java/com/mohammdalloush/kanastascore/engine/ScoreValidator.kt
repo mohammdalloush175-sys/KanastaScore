@@ -45,18 +45,26 @@ object ScoreValidator {
             return "نقاط الحرق لا يمكن أن تكون سالبة"
         }
 
-        val ranks = mutableSetOf<CardRank>()
-        for (meld in input.melds) {
-            val error = validateMeld(meld)
-            if (error != null) return error
-            
-            if (ranks.contains(meld.rank)) {
-                return "لا يمكن تكرار الباب من نفس الرتبة"
+        val hasCanasta = if (input.scoringMode == MeldScoringMode.DETAILED) {
+            val ranks = mutableSetOf<CardRank>()
+            for (meld in input.melds) {
+                val error = validateMeld(meld)
+                if (error != null) return error
+                
+                if (ranks.contains(meld.rank)) {
+                    return "لا يمكن تكرار الباب من نفس الرتبة"
+                }
+                ranks.add(meld.rank)
             }
-            ranks.add(meld.rank)
+            input.melds.any { it.canastaType != null }
+        } else {
+            if (input.directInput.totalMeldPoints < 0 || input.directInput.redCanastasCount < 0 || input.directInput.blackCanastasCount < 0) {
+                return "القيم لا يمكن أن تكون سالبة"
+            }
+            (input.directInput.redCanastasCount + input.directInput.blackCanastasCount) > 0
         }
 
-        if (input.exited && input.melds.none { it.canastaType != null }) {
+        if (input.exited && !hasCanasta) {
             return "لا يمكن الخروج دون وجود كنستا صالحة"
         }
 

@@ -40,13 +40,17 @@ object ScoreCalculator {
 
     fun calculateScore(input: TeamRoundInput): ScoreBreakdown {
         val details = mutableListOf<String>()
-        val hasCanasta = input.melds.any { it.canastaType != null }
+        val hasCanasta = if (input.scoringMode == MeldScoringMode.DETAILED) {
+            input.melds.any { it.canastaType != null }
+        } else {
+            (input.directInput.redCanastasCount + input.directInput.blackCanastasCount) > 0
+        }
 
         if (!hasCanasta) {
             val redThreesPenalty = calculateRedThreesScore(input.redThreesCount, false)
             val total = PENALTY_NO_CANASTA + redThreesPenalty
             
-            details.add("لا توجد كنستا صالحة (-300)")
+            details.add("لا توجد كنستا صالحة ($PENALTY_NO_CANASTA)")
             if (input.redThreesCount > 0) {
                 details.add("عقوبة الثلاثات الحمراء (${redThreesPenalty})")
             }
@@ -65,15 +69,33 @@ object ScoreCalculator {
         var redCanastaBonus = 0
         var blackCanastaBonus = 0
 
-        input.melds.forEach { meld ->
-            val points = calculateMeldPoints(meld)
-            meldPointsTotal += points
-            when (meld.canastaType) {
-                CanastaType.RED -> redCanastaBonus += BONUS_RED_CANASTA
-                CanastaType.BLACK -> blackCanastaBonus += BONUS_BLACK_CANASTA
-                null -> {}
+        if (input.scoringMode == MeldScoringMode.DETAILED) {
+            input.melds.forEach { meld ->
+                val points = calculateMeldPoints(meld)
+                meldPointsTotal += points
+                when (meld.canastaType) {
+                    CanastaType.RED -> redCanastaBonus += BONUS_RED_CANASTA
+                    CanastaType.BLACK -> blackCanastaBonus += BONUS_BLACK_CANASTA
+                    null -> {}
+                }
+            }
+            details.add("نقاط الأبواب: $meldPointsTotal")
+        } else {
+            meldPointsTotal = input.directInput.totalMeldPoints
+            redCanastaBonus = input.directInput.redCanastasCount * BONUS_RED_CANASTA
+            blackCanastaBonus = input.directInput.blackCanastasCount * BONUS_BLACK_CANASTA
+            
+            details.add("مجموع نقاط الأبواب: $meldPointsTotal")
+            if (input.directInput.redCanastasCount > 0) {
+                details.add("عدد الكنستات الحمراء: ${input.directInput.redCanastasCount}")
+            }
+            if (input.directInput.blackCanastasCount > 0) {
+                details.add("عدد الكنستات السوداء: ${input.directInput.blackCanastasCount}")
             }
         }
+
+        if (redCanastaBonus > 0) details.add("مكافأة كنستا حمراء: +$redCanastaBonus")
+        if (blackCanastaBonus > 0) details.add("مكافأة كنستا سوداء: +$blackCanastaBonus")
 
         val redThreesScore = calculateRedThreesScore(input.redThreesCount, true)
         val exitBonus = if (input.exited) BONUS_EXIT else 0
@@ -81,9 +103,6 @@ object ScoreCalculator {
 
         val total = meldPointsTotal + redCanastaBonus + blackCanastaBonus + redThreesScore + exitBonus + remainingCardsPenalty
 
-        details.add("نقاط الأبواب: $meldPointsTotal")
-        if (redCanastaBonus > 0) details.add("مكافأة كنستا حمراء: +$redCanastaBonus")
-        if (blackCanastaBonus > 0) details.add("مكافأة كنستا سوداء: +$blackCanastaBonus")
         if (redThreesScore > 0) details.add("الثلاثات الحمراء: +$redThreesScore")
         if (exitBonus > 0) details.add("مكافأة الخروج: +$exitBonus")
         if (remainingCardsPenalty < 0) details.add("الحرق: $remainingCardsPenalty")

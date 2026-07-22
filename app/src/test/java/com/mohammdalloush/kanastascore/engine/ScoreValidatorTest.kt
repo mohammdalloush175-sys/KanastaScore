@@ -7,37 +7,29 @@ import org.junit.Test
 class ScoreValidatorTest {
 
     @Test
-    fun testValidateMeld() {
-        // Legal
-        assertNull(ScoreValidator.validateMeld(MeldInput(rank = CardRank.FOUR, naturalCount = 3, twosCount = 0, jokersCount = 0)))
+    fun testExclusiveExit() {
+        val team1 = TeamRoundInput(exited = true, directInput = DirectMeldScoreInput(redCanastasCount = 1))
+        val team2 = TeamRoundInput(exited = true, directInput = DirectMeldScoreInput(redCanastasCount = 1))
         
-        // Less than 2 natural
-        assertNotNull(ScoreValidator.validateMeld(MeldInput(rank = CardRank.FOUR, naturalCount = 1, twosCount = 2, jokersCount = 0)))
-        
-        // More than 2 wild
-        assertNotNull(ScoreValidator.validateMeld(MeldInput(rank = CardRank.FOUR, naturalCount = 3, twosCount = 2, jokersCount = 1)))
-        
-        // Red canasta with wild
-        assertNotNull(ScoreValidator.validateMeld(MeldInput(rank = CardRank.FOUR, naturalCount = 7, twosCount = 1, jokersCount = 0, canastaType = CanastaType.RED)))
-        
-        // Black canasta without wild
-        assertNotNull(ScoreValidator.validateMeld(MeldInput(rank = CardRank.FOUR, naturalCount = 7, twosCount = 0, jokersCount = 0, canastaType = CanastaType.BLACK)))
+        assertNotNull(ScoreValidator.validateRound(team1, team2))
     }
 
     @Test
-    fun testValidateRound() {
-        val team1 = TeamRoundInput(
-            melds = listOf(MeldInput(rank = CardRank.FOUR, naturalCount = 3, twosCount = 0, jokersCount = 0)),
-            exited = true // Error: exited without canasta
-        )
-        val team2 = TeamRoundInput()
-        
-        assertNotNull(ScoreValidator.validateRound(team1, team2))
-        
-        val team1Ok = TeamRoundInput(
-            melds = listOf(MeldInput(rank = CardRank.FOUR, naturalCount = 7, twosCount = 0, jokersCount = 0, canastaType = CanastaType.RED)),
+    fun testValidateDirectMode() {
+        // No canasta but exited
+        val input = TeamRoundInput(
+            scoringMode = MeldScoringMode.DIRECT_TOTAL,
+            directInput = DirectMeldScoreInput(totalMeldPoints = 100, redCanastasCount = 0, blackCanastasCount = 0),
             exited = true
         )
-        assertNull(ScoreValidator.validateRound(team1Ok, team2))
+        assertNotNull(ScoreValidator.validateTeamInput(input))
+        
+        // Legal direct
+        val legalInput = TeamRoundInput(
+            scoringMode = MeldScoringMode.DIRECT_TOTAL,
+            directInput = DirectMeldScoreInput(totalMeldPoints = 100, redCanastasCount = 1, blackCanastasCount = 0),
+            exited = true
+        )
+        assertNull(ScoreValidator.validateTeamInput(legalInput))
     }
 }

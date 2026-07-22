@@ -11,57 +11,160 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/TextAppearance.KanastaScore.SectionTitle"
-        android:layout_marginStart="@dimen/spacing_8"
-        android:layout_marginBottom="@dimen/spacing_8"
+        android:layout_marginStart="@dimen/spacing_4"
+        android:layout_marginBottom="@dimen/spacing_12"
         tools:text="اسم الفريق"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_melds"
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/toggle_scoring_mode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/spacing_16"
+        app:singleSelection="true"
+        app:checkedButton="@+id/btn_mode_detailed">
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_mode_detailed"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/scoring_mode_detailed"
+            android:textSize="@dimen/text_12"/>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_mode_direct"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/scoring_mode_direct"
+            android:textSize="@dimen/text_12"/>
+    </com.google.android.material.button.MaterialButtonToggleGroup>
+
+    <!-- Detailed Mode View -->
+    <LinearLayout
+        android:id="@+id/layout_detailed_mode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:nestedScrollingEnabled="false"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_meld"/>
+        android:orientation="vertical">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_add_meld"
-        style="@style/Widget.Material3.Button.TonalButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/add_meld"
-        app:icon="@android:drawable/ic_input_add"
-        android:layout_marginTop="@dimen/spacing_8"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_melds"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_meld"/>
 
-    <!-- Extras Section -->
+        <TextView
+            android:id="@+id/tv_no_melds"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="@dimen/spacing_24"
+            android:text="@string/no_melds_added"
+            android:textColor="@color/onSurfaceVariant"
+            android:visibility="gone"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_add_meld"
+            style="@style/Widget.KanastaScore.Button.Tonal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/add_meld"
+            app:icon="@android:drawable/ic_input_add"
+            android:layout_marginTop="@dimen/spacing_8"/>
+    </LinearLayout>
+
+    <!-- Direct Mode View -->
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/layout_direct_mode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_16"
-        app:cardBackgroundColor="@color/surfaceVariant"
-        app:strokeWidth="1dp"
-        app:strokeColor="@color/outline">
+        android:visibility="gone"
+        app:cardBackgroundColor="@color/surfaceVariant">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="@dimen/spacing_12">
+            android:padding="@dimen/spacing_16">
 
-            <!-- Red Threes -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/direct_meld_total"
+                android:layout_marginBottom="@dimen/spacing_16">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_direct_total"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:baselineAligned="false">
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="@string/red_canastas_count"
+                    android:layout_marginEnd="@dimen/spacing_8">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_red_canastas"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="@string/black_canastas_count">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_black_canastas"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"/>
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_direct_mode_warning"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_8"
+                android:text="@string/no_canasta_warning"
+                android:textColor="@color/negativeScore"
+                android:textSize="@dimen/text_12"
+                android:visibility="gone"/>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Extras Section -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_16">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_16">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical">
-
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/red_threes"
-                    android:textColor="@color/onSurface"
                     android:textStyle="bold"/>
-
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                     android:layout_width="100dp"
@@ -71,44 +174,44 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="none"
-                        android:padding="@dimen/spacing_8"/>
+                        android:background="@null"/>
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/outline"
-                android:layout_marginVertical="@dimen/spacing_12"/>
+                android:background="@color/divider"
+                android:layout_marginVertical="@dimen/spacing_16"/>
 
-            <!-- Exit & Penalty -->
-            <LinearLayout
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switch_exited"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:text="@string/exited_label"
+                android:textStyle="bold"/>
 
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/switch_exited"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/exited_label"
-                    android:textColor="@color/onSurface"
-                    android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/tv_exited_hint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_12"
+                android:textColor="@color/onSurfaceVariant"
+                android:layout_marginBottom="@dimen/spacing_8"
+                android:visibility="gone"
+                tools:text="أنهى الفريق الأول الجولة"/>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="120dp"
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/remaining_points"
+                android:layout_marginTop="@dimen/spacing_8">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_remaining_points"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/remaining_points">
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/et_remaining_points"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="number"
-                        android:textSize="@dimen/text_14"/>
-                </com.google.android.material.textfield.TextInputLayout>
-            </LinearLayout>
+                    android:inputType="number"/>
+            </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
@@ -117,7 +220,7 @@
         android:id="@+id/tv_meld_total"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_8"
+        android:layout_marginTop="@dimen/spacing_12"
         android:layout_gravity="end"
         android:textStyle="bold"
         android:textColor="@color/primary"

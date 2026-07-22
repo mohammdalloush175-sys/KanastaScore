@@ -41,6 +41,20 @@ class GameViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
         team2RoundInput.value = input
     }
 
+    fun setTeamExited(teamIndex: Int, exited: Boolean) {
+        if (teamIndex == 0) {
+            team1RoundInput.value = team1RoundInput.value?.copy(exited = exited)
+            if (exited) {
+                team2RoundInput.value = team2RoundInput.value?.copy(exited = false)
+            }
+        } else {
+            team2RoundInput.value = team2RoundInput.value?.copy(exited = exited)
+            if (exited) {
+                team1RoundInput.value = team1RoundInput.value?.copy(exited = false)
+            }
+        }
+    }
+
     fun addRound(record: RoundRecord) {
         val currentState = _gameState.value ?: return
         val newRounds = currentState.rounds.toMutableList()
