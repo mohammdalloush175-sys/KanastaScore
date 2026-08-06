@@ -23,6 +23,8 @@ KanastaScore is an Android companion app for recording, calculating, and analyzi
 - Share match results as an image.
 - System, light, and dark themes.
 - Responsive layouts for landscape and larger screens.
+- Built-in GitHub update page with manual and daily checks.
+- Android notification when a newer GitHub release is available.
 - Arabic-first interface with RTL support.
 
 ## Scoring rules implemented
@@ -79,6 +81,7 @@ app/src/main/java/com/mohammdalloush/kanastascore/
 ├── engine/       # Models, scoring rules, calculation, and validation
 ├── ui/           # Match, round, history, statistics, and settings screens
 ├── ui/adapters/  # RecyclerView adapters
+├── update/       # GitHub release checks and update notifications
 ├── utils/        # Local storage, backup, and result sharing
 └── viewmodel/    # Application state and match workflow
 ```
@@ -89,8 +92,13 @@ The unit-test suite covers scoring calculations, validation, red-three synchroni
 
 ## Privacy
 
-KanastaScore stores match data locally and does not request internet access. See [PRIVACY.md](PRIVACY.md).
+KanastaScore stores match data locally. Internet access is used only to read public release metadata from the official GitHub repository when checking for updates. See [PRIVACY.md](PRIVACY.md).
 
 ## Developer
 
 Developed by **Mohammd Aloush**.
+
+
+## App updates
+
+The Updates screen reads public releases from the official GitHub repository, compares the published tag with `BuildConfig.VERSION_NAME`, and opens the APK asset or release page in the browser. Automatic checks run approximately once per day when enabled. Android still asks the user to confirm installation; the app never performs silent installs.

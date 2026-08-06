@@ -1,6 +1,6 @@
 # KanastaScore Privacy Information
 
-KanastaScore is an offline score-management application.
+KanastaScore is a local-first score-management application.
 
 ## Stored data
 
@@ -8,7 +8,9 @@ The application stores match names, team and player names, round scores, setting
 
 ## Internet access
 
-KanastaScore does not request the Android internet permission and does not upload match data to an external service.
+KanastaScore requests internet access only for its optional update checker. The checker reads public version information, release notes, and APK links from the official GitHub Releases API.
+
+Match names, player names, scores, statistics, backups, and settings are not uploaded to GitHub or to the developer.
 
 ## Backup and sharing
 

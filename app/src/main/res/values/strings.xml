@@ -184,4 +184,29 @@
     <string name="error_player_names_required">يجب إدخال أسماء جميع اللاعبين</string>
     <string name="error_invalid_input">مدخلات غير صالحة</string>
 
+    <!-- Updates -->
+    <string name="updates_title">التحديثات</string>
+    <string name="updates_section">التحديثات وGitHub</string>
+    <string name="updates_summary">التحقق من إصدار جديد وفتح صفحة المشروع</string>
+    <string name="updates_github_subtitle">يتحقق KanastaScore من الإصدارات المنشورة في مستودع GitHub الرسمي للتطبيق.</string>
+    <string name="installed_version">الإصدار المثبت</string>
+    <string name="latest_version">أحدث إصدار على GitHub</string>
+    <string name="not_checked_yet">لم يتم التحقق بعد</string>
+    <string name="checking_updates">جارٍ التحقق من التحديثات…</string>
+    <string name="check_for_updates">التحقق الآن</string>
+    <string name="update_available">يتوفر تحديث جديد</string>
+    <string name="app_up_to_date">أنت تستخدم أحدث إصدار متوفر</string>
+    <string name="update_available_default_notes">اضغط لتنزيل الإصدار الجديد من GitHub.</string>
+    <string name="download_update">تنزيل التحديث</string>
+    <string name="update_notifications">إشعارات التحديثات</string>
+    <string name="update_notifications_summary">فحص يومي وإشعار عند نشر إصدار أحدث</string>
+    <string name="releases_page">صفحة الإصدارات</string>
+    <string name="github_project">مشروع GitHub</string>
+    <string name="last_update_check">آخر تحقق: %1$s</string>
+    <string name="update_install_note">سينزّل Android ملف APK من المتصفح ثم يطلب تأكيد التثبيت. لا يوجد تثبيت صامت.</string>
+    <string name="update_check_failed">تعذر التحقق: %1$s</string>
+    <string name="unknown_version">غير معروف</string>
+    <string name="test_update_notification">اختبار إشعار التحديث (Debug)</string>
+    <string name="no_published_releases">لا توجد إصدارات منشورة</string>
+
 </resources>

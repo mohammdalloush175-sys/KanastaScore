@@ -165,6 +165,32 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Updates Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/updates_section"
+                style="@style/TextAppearance.Material3.TitleMedium"
+                android:textColor="@color/primary"
+                android:layout_marginBottom="@dimen/spacing_8"
+                android:layout_marginStart="@dimen/spacing_8"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_24">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_updates"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/updates_summary"
+                    android:gravity="start|center_vertical"
+                    android:padding="@dimen/spacing_16"
+                    app:icon="@android:drawable/ic_popup_sync"/>
+            </com.google.android.material.card.MaterialCardView>
+
             <!-- About Section -->
             <LinearLayout
                 android:layout_width="match_parent"

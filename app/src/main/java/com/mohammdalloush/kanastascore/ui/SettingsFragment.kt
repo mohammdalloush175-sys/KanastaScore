@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import com.mohammdalloush.kanastascore.BuildConfig
 import com.mohammdalloush.kanastascore.MainActivity
 import com.mohammdalloush.kanastascore.R
 import com.mohammdalloush.kanastascore.databinding.FragmentSettingsBinding
@@ -56,6 +57,10 @@ class SettingsFragment : Fragment() {
         binding.btnRules.setOnClickListener {
             (activity as MainActivity).replaceFragment(RulesFragment(), true)
         }
+
+        binding.btnUpdates.setOnClickListener {
+            (activity as MainActivity).replaceFragment(UpdatesFragment(), true)
+        }
         
         binding.btnExport.setOnClickListener {
             val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
@@ -87,7 +92,7 @@ class SettingsFragment : Fragment() {
                 .show()
         }
         
-        binding.tvVersion.text = getString(R.string.app_version, "1.0.0")
+        binding.tvVersion.text = getString(R.string.app_version, BuildConfig.VERSION_NAME)
     }
 
     private fun setupThemeSelection(viewModel: GameViewModel) {

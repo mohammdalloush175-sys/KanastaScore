@@ -15,6 +15,8 @@ import androidx.fragment.app.Fragment
 import com.mohammdalloush.kanastascore.databinding.ActivityMainBinding
 import com.mohammdalloush.kanastascore.engine.AppThemeMode
 import com.mohammdalloush.kanastascore.ui.*
+import com.mohammdalloush.kanastascore.update.UpdateNotificationManager
+import com.mohammdalloush.kanastascore.update.UpdateScheduler
 import com.mohammdalloush.kanastascore.utils.StorageHelper
 import com.mohammdalloush.kanastascore.viewmodel.GameViewModel
 
@@ -30,6 +32,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
+        UpdateNotificationManager.createChannel(this)
+        UpdateScheduler.schedule(this)
+        UpdateScheduler.checkNowInBackground(this)
 
         val savedTheme = StorageHelper.loadThemeMode(this)
         applyTheme(savedTheme)
@@ -75,7 +80,7 @@ class MainActivity : AppCompatActivity() {
                     is ResultFragment -> {
                         replaceFragment(RoundInputFragment())
                     }
-                    is SettingsFragment, is StatisticsFragment, is RulesFragment, is MatchEndFragment -> {
+                    is SettingsFragment, is StatisticsFragment, is RulesFragment, is UpdatesFragment, is MatchEndFragment -> {
                         if (supportFragmentManager.backStackEntryCount > 0) {
                             supportFragmentManager.popBackStack()
                         } else {
@@ -144,11 +149,13 @@ class MainActivity : AppCompatActivity() {
             is SettingsFragment -> getString(R.string.settings_title)
             is StatisticsFragment -> getString(R.string.statistics_label)
             is RulesFragment -> getString(R.string.rules_title)
+            is UpdatesFragment -> getString(R.string.updates_title)
             is MatchEndFragment -> getString(R.string.match_ended_title)
             else -> getString(R.string.app_name)
         }
         
         supportActionBar?.setDisplayHomeAsUpEnabled(fragment !is MatchesFragment)
+        invalidateOptionsMenu()
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -169,6 +176,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            R.id.action_settings -> {
+                val current = supportFragmentManager.findFragmentById(R.id.fragment_container)
+                if (current !is SettingsFragment) {
+                    replaceFragment(SettingsFragment(), true)
+                }
+                true
+            }
             R.id.action_theme -> {
                 showThemeSelectionDialog()
                 true
