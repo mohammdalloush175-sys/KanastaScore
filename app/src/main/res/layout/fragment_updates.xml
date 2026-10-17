@@ -53,7 +53,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="@color/divider"
-                    android:layout_marginVertical="@dimen/spacing_16" />
+                    android:layout_marginVertical="@dimen/spacing_12" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -154,6 +154,24 @@
             android:layout_height="wrap_content"
             android:text="@string/check_for_updates"
             app:icon="@android:drawable/ic_popup_sync" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_official_site"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_8"
+            android:text="@string/official_app_site"
+            app:icon="@android:drawable/ic_menu_view" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_share_app_link"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_8"
+            android:text="@string/share_app_link"
+            app:icon="@android:drawable/ic_menu_share" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_releases"

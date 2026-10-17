@@ -78,6 +78,10 @@ class UpdatesFragment : Fragment() {
                 openUrl(release.downloadUrl ?: release.releaseUrl)
             }
         }
+        binding.btnOfficialSite.setOnClickListener {
+            openUrl(GitHubUpdateChecker.OFFICIAL_APP_PAGE_URL)
+        }
+        binding.btnShareAppLink.setOnClickListener { shareOfficialAppLink() }
         binding.btnReleases.setOnClickListener { openUrl(GitHubUpdateChecker.RELEASES_URL) }
         binding.btnGithub.setOnClickListener { openUrl(GitHubUpdateChecker.REPOSITORY_URL) }
         binding.btnTestNotification.isVisible = BuildConfig.DEBUG
@@ -172,6 +176,23 @@ class UpdatesFragment : Fragment() {
                 requireContext(),
                 Manifest.permission.POST_NOTIFICATIONS,
             ) != PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun shareOfficialAppLink() {
+        val shareText = getString(
+            R.string.share_app_link_text,
+            GitHubUpdateChecker.OFFICIAL_APP_PAGE_URL,
+        )
+        val shareIntent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_TEXT, shareText)
+        }
+        startActivity(
+            Intent.createChooser(
+                shareIntent,
+                getString(R.string.share_app_link),
+            ),
+        )
     }
 
     private fun openUrl(url: String) {

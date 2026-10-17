@@ -5,6 +5,7 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 object GitHubUpdateChecker {
+    const val OFFICIAL_APP_PAGE_URL = "https://kanasta-7ecdf.web.app/apps/kanasta-score/"
     const val REPOSITORY_URL = "https://github.com/mohammdalloush175-sys/KanastaScore"
     const val RELEASES_URL = "https://github.com/mohammdalloush175-sys/KanastaScore/releases"
     private const val API_URL = "https://api.github.com/repos/mohammdalloush175-sys/KanastaScore/releases?per_page=20"
