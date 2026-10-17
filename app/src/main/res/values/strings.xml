@@ -1,43 +1,49 @@
 <resources>
     <string name="app_name">KanastaScore</string>
+
+    <!-- Match Setup -->
+    <string name="match_setup_title">حساب نتائج الكنستا</string>
+    <string name="match_setup_description">أدخل أسماء اللاعبين وحدد هدف المباراة</string>
+    <string name="player_1">اللاعب 1 (فريق 1)</string>
+    <string name="player_2">اللاعب 2 (فريق 2)</string>
+    <string name="player_3">اللاعب 3 (فريق 1)</string>
+    <string name="player_4">اللاعب 4 (فريق 2)</string>
+    <string name="team_1_name">اسم الفريق 1 (اختياري)</string>
+    <string name="team_2_name">اسم الفريق 2 (اختياري)</string>
+    <string name="target_score_label">السكور النهائي المستهدف</string>
+    <string name="start_match">بدء المباراة</string>
+    <string name="continue_match">متابعة المباراة الحالية</string>
     <string name="new_match">مباراة جديدة</string>
-    <string name="match_name">اسم المباراة</string>
-    <string name="match_name_hint">مثال: سهرة الجمعة</string>
-    <string name="match_date">تاريخ المباراة</string>
-    <string name="team1_name">اسم الفريق الأول</string>
-    <string name="team2_name">اسم الفريق الثاني</string>
-    <string name="player_name">اسم اللاعب</string>
-    <string name="players_count">عدد اللاعبين</string>
-    <string name="target_score">النقاط المطلوبة للفوز</string>
-    <string name="create_match">إنشاء المباراة</string>
-    <string name="cancel">إلغاء</string>
-    <string name="save">حفظ</string>
-    <string name="delete">حذف</string>
-    <string name="edit">تعديل</string>
-    <string name="share">مشاركة</string>
-    <string name="close">إغلاق</string>
-    <string name="confirm">تأكيد</string>
+    <string name="matches_title">المباريات</string>
+    <string name="match_name_label">اسم المباراة (اختياري)</string>
+    <string name="no_matches_yet">لا توجد مباريات محفوظة</string>
+    <string name="no_matches_description">ابدأ مباراة جديدة وسيسجل التطبيق نتائجها تلقائياً.</string>
+    <string name="start_first_match">بدء أول مباراة</string>
+    <string name="match_status_active">جارية</string>
+    <string name="match_status_completed">مكتملة</string>
     <string name="continue_label">متابعة</string>
-    <string name="back">رجوع</string>
-    <string name="empty_matches">لا توجد مباريات بعد</string>
-    <string name="start_first_match">ابدأ أول مباراة</string>
-    <string name="delete_match_confirm">هل أنت متأكد من حذف هذه المباراة؟</string>
-    <string name="match_in_progress">قيد اللعب</string>
-    <string name="match_finished">منتهية</string>
-    <string name="rounds_count">%1$d جولة</string>
+    <string name="view_results">عرض النتائج</string>
+    <string name="delete_match">حذف المباراة</string>
+    <string name="confirm_delete_match">هل أنت متأكد من حذف هذه المباراة؟ لا يمكن التراجع عن هذا الإجراء.</string>
     <string name="last_updated">آخر تحديث: %1$s</string>
-    <string name="open_match">فتح المباراة</string>
-    <string name="resume_match">متابعة المباراة</string>
-    <string name="view_match">عرض المباراة</string>
-    <string name="date_format">dd/MM/yyyy</string>
-    <string name="team1_default">الفريق الأول</string>
-    <string name="team2_default">الفريق الثاني</string>
-    <string name="player1_default">اللاعب 1</string>
-    <string name="player2_default">اللاعب 2</string>
+    <string name="result_title_simple">نتيجة الجولة</string>
+    <string name="confirm_abandon_setup">تجاهل إعداد المباراة الجديدة؟</string>
+    <string name="draft_saved">تم حفظ مسودة الجولة</string>
+    <string name="confirm_new_match_title">بدء مباراة جديدة؟</string>
+    <string name="confirm_new_match_message">سيتم إنهاء المباراة الحالية ومسح الجولات والمدخلات غير المسجلة، ثم العودة إلى شاشة إعداد اللاعبين.</string>
+    <string name="confirm_new_game">بدء مباراة جديدة سيؤدي لحذف الحالية. هل أنت متأكد؟</string>
+    <string name="yes">نعم، ابدأ</string>
+    <string name="no">إلغاء</string>
+    <string name="team_1_label">الفريق الأول</string>
+    <string name="team_2_label">الفريق الثاني</string>
+    <string name="developed_by">Developed by Mohammd Alloush</string>
+    <string name="theme_selection">إعداد المظهر</string>
     <string name="theme_system">حسب النظام</string>
-    <string name="theme_light">الوضع الفاتح</string>
+    <string name="theme_light">الوضع النهاري</string>
     <string name="theme_dark">الوضع الليلي</string>
     <string name="error_same_team_names">يجب أن يكون اسما الفريقين مختلفين</string>
+
+    <!-- Round Input -->
     <string name="round_number_label">الجولة %1$d</string>
     <string name="target_score_info">الهدف: %1$d</string>
     <string name="min_points_info">حد التنزيل: %1$d</string>
@@ -73,6 +79,8 @@
     <string name="meld_points_label">%1$d نقطة</string>
     <string name="total_progression">المجموع: %1$d -> %2$d</string>
     <string name="no_canasta_warning">لن يتم احتساب نقاط الأبواب لأن الفريق لا يملك كنستا.</string>
+
+    <!-- Result -->
     <string name="result_title">نتيجة الجولة %1$d</string>
     <string name="record_round">تسجيل الجولة</string>
     <string name="edit_round">عودة للتعديل</string>
@@ -164,13 +172,19 @@
 عقوبة لا كنستا = -300\n
 النتيجة = -500</string>
     <string name="rematch_prefix">إعادة: %1$s</string>
+
+    <!-- History -->
     <string name="history_title">سجل الجولات</string>
     <string name="round_item_title">جولة %1$d</string>
     <string name="delete_round_confirm">هل أنت متأكد من حذف هذه الجولة؟</string>
     <string name="no_rounds_yet">لم يتم تسجيل أي جولة بعد</string>
     <string name="back_to_round">العودة للجولة</string>
+
+    <!-- Validation -->
     <string name="error_player_names_required">يجب إدخال أسماء جميع اللاعبين</string>
     <string name="error_invalid_input">مدخلات غير صالحة</string>
+
+    <!-- Updates -->
     <string name="updates_title">التحديثات</string>
     <string name="updates_section">التحديثات وGitHub</string>
     <string name="updates_summary">التحقق من إصدار جديد وفتح صفحة المشروع</string>
@@ -197,4 +211,5 @@
     <string name="unknown_version">غير معروف</string>
     <string name="test_update_notification">اختبار إشعار التحديث (Debug)</string>
     <string name="no_published_releases">لا توجد إصدارات منشورة</string>
+
 </resources>
