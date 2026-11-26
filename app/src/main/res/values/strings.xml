@@ -68,6 +68,7 @@
     <string name="exited_label">إنهاء الجولة (الفتوح)</string>
     <string name="team_exited_hint">أنهى %1$s الجولة</string>
     <string name="remaining_points">أوراق اليد (الحرق)</string>
+    <string name="clear_meld_points">مسح النقاط</string>
     <string name="direct_meld_total">مجموع نقاط الأبواب</string>
     <string name="red_canastas_count">عدد الكنستات الحمراء</string>
     <string name="black_canastas_count">عدد الكنستات السوداء</string>

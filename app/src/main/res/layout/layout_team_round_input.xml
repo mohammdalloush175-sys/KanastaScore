@@ -51,8 +51,7 @@
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scrollbars="none"
-                android:layout_marginBottom="@dimen/spacing_16">
+                android:scrollbars="none">
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -63,7 +62,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="+10"
-                        android:visibility="gone"
                         android:layout_marginEnd="@dimen/spacing_4"
                         android:minWidth="60dp"
                         app:paddingStart="4dp"
@@ -98,15 +96,19 @@
                         android:minWidth="60dp"
                         app:paddingStart="4dp"
                         app:paddingEnd="4dp"/>
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_meld_clear"
-                        style="@style/Widget.Material3.Button.TextButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="مسح"
-                        android:textColor="@color/negativeScore"/>
                 </LinearLayout>
             </HorizontalScrollView>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_meld_clear"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginBottom="@dimen/spacing_8"
+                android:minHeight="48dp"
+                android:text="@string/clear_meld_points"
+                android:textColor="@color/negativeScore"/>
 
             <!-- Canastas Section -->
             <LinearLayout
