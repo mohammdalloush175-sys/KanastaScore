@@ -237,8 +237,12 @@ class RoundInputFragment : Fragment() {
 
         sectionBinding.tvTeamName.text = team.name
 
-        // Direct Mode Inputs
-        sectionBinding.etDirectTotal.setText(initialInput.directInput.totalMeldPoints.toString())
+        val isFirstTeam = teamIndex == 0
+        val emptyMeldPointsText = if (isFirstTeam) "" else "0"
+        val initialMeldPoints = initialInput.directInput.totalMeldPoints
+        sectionBinding.etDirectTotal.setText(
+            if (initialMeldPoints == 0) emptyMeldPointsText else initialMeldPoints.toString()
+        )
         setupTextWatcher(sectionBinding.etDirectTotal) {
             val current = inputLiveData.value!!
             inputLiveData.value = current.copy(directInput = current.directInput.copy(totalMeldPoints = it.toIntOrNull() ?: 0))
@@ -263,6 +267,8 @@ class RoundInputFragment : Fragment() {
         }
 
         // Shortcuts for Meld Points
+        sectionBinding.btnMeldPlus10.isVisible = isFirstTeam
+        sectionBinding.btnMeldPlus10.setOnClickListener { addMeldPoints(sectionBinding, 10) }
         sectionBinding.btnMeldPlus50.setOnClickListener { addMeldPoints(sectionBinding, 50) }
         sectionBinding.btnMeldPlus100.setOnClickListener { addMeldPoints(sectionBinding, 100) }
         sectionBinding.btnMeldPlus200.setOnClickListener { addMeldPoints(sectionBinding, 200) }
@@ -272,11 +278,11 @@ class RoundInputFragment : Fragment() {
                 AlertDialog.Builder(requireContext())
                     .setTitle(R.string.confirm_clear)
                     .setMessage(R.string.confirm_clear_meld_msg)
-                    .setPositiveButton(R.string.yes) { _, _ -> sectionBinding.etDirectTotal.setText("0") }
+                    .setPositiveButton(R.string.yes) { _, _ -> sectionBinding.etDirectTotal.setText(emptyMeldPointsText) }
                     .setNegativeButton(R.string.no, null)
                     .show()
             } else {
-                sectionBinding.etDirectTotal.setText("0")
+                sectionBinding.etDirectTotal.setText(emptyMeldPointsText)
             }
         }
 
