@@ -30,8 +30,8 @@ class ResultFragment : Fragment() {
         val match = viewModel.getActiveMatch() ?: return
         val state = match.gameState
 
-        val team1Input = viewModel.team1RoundInput.value!!
-        val team2Input = viewModel.team2RoundInput.value!!
+        val team1Input = viewModel.team1RoundInput.value!!.copy(manualRoundTotal = null)
+        val team2Input = viewModel.team2RoundInput.value!!.copy(manualRoundTotal = null)
 
         val res1 = ScoreCalculator.calculateScore(team1Input)
         val res2 = ScoreCalculator.calculateScore(team2Input)
@@ -66,18 +66,8 @@ class ResultFragment : Fragment() {
         }
 
         binding.btnRecord.setOnClickListener {
-            val nextRoundNumber = (state.rounds.maxByOrNull { it.roundNumber }?.roundNumber ?: 0) + 1
-            val record = RoundRecord(
-                id = viewModel.editingRoundId.value ?: java.util.UUID.randomUUID().toString(),
-                roundNumber = nextRoundNumber,
-                team1Input = team1Input,
-                team2Input = team2Input,
-                team1Result = res1,
-                team2Result = res2
-            )
-            viewModel.addRound(record)
-            viewModel.clearRoundDraft()
-            
+            if (!viewModel.recordRound(team1Input, team2Input)) return@setOnClickListener
+
             val updatedMatch = viewModel.getActiveMatch()
             if (updatedMatch?.status == MatchStatus.COMPLETED) {
                 mainActivity.replaceFragment(MatchEndFragment())

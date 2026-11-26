@@ -29,7 +29,9 @@ enum class MatchStatus {
 
 data class RoundDraft(
     val team1Input: TeamRoundInput = TeamRoundInput(),
-    val team2Input: TeamRoundInput = TeamRoundInput()
+    val team2Input: TeamRoundInput = TeamRoundInput(),
+    val useManualTotals: Boolean = false,
+    val editingRoundId: String? = null
 )
 
 data class SavedMatch(
@@ -70,7 +72,8 @@ data class TeamRoundInput(
     val redThreesCount: Int = 0,
     val isRedThreesManual: Boolean = false,
     val exited: Boolean = false,
-    val remainingPoints: Int = 0
+    val remainingPoints: Int = 0,
+    val manualRoundTotal: Int? = null
 )
 
 data class ScoreBreakdown(

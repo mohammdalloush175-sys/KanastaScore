@@ -17,12 +17,15 @@ class GameViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
     val team1RoundInput = MutableLiveData<TeamRoundInput>(TeamRoundInput())
     val team2RoundInput = MutableLiveData<TeamRoundInput>(TeamRoundInput())
     
+    var useManualTotals = false
+
     val editingRoundId = MutableLiveData<String?>(null)
 
     private val _isRecordingRound = MutableLiveData<Boolean>(false)
     val isRecordingRound: LiveData<Boolean> = _isRecordingRound
 
     private var lastUndoableRound: RoundRecord? = null
+    private var replacedRound: RoundRecord? = null
     private var lastUndoableMatchId: String? = null
 
     private val _lastRecordedRoundNumber = MutableLiveData<Int?>(null)
@@ -49,10 +52,12 @@ class GameViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
         activeMatchId.value = matchId
         val match = _matchesStore.value?.matches?.find { it.id == matchId }
         if (match != null) {
+            useManualTotals = match.draft.useManualTotals
             team1RoundInput.value = match.draft.team1Input
             team2RoundInput.value = match.draft.team2Input
-            editingRoundId.value = null
+            editingRoundId.value = match.draft.editingRoundId
         } else {
+            useManualTotals = false
             clearRoundDraft()
         }
         updateStoreActiveId(matchId)
@@ -90,6 +95,7 @@ class GameViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
         // But usually, it just means going to setup screen.
         // For this app, it means we don't care about activeMatchId anymore while setting up.
         activeMatchId.value = null
+        useManualTotals = false
         clearRoundDraft()
     }
 
@@ -105,7 +111,12 @@ class GameViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
         val matchIndex = currentStore.matches.indexOfFirst { it.id == matchId }
         if (matchIndex >= 0) {
             val updatedMatch = currentStore.matches[matchIndex].copy(
-                draft = RoundDraft(team1RoundInput.value!!, team2RoundInput.value!!),
+                draft = RoundDraft(
+                    team1Input = team1RoundInput.value!!,
+                    team2Input = team2RoundInput.value!!,
+                    useManualTotals = useManualTotals,
+                    editingRoundId = editingRoundId.value
+                ),
                 updatedAt = System.currentTimeMillis()
             )
             val newList = currentStore.matches.toMutableList()
@@ -167,6 +178,33 @@ class GameViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
         saveCurrentDraft()
     }
 
+    fun editRound(round: RoundRecord) {
+        editingRoundId.value = round.id
+        useManualTotals = round.team1Input.manualRoundTotal != null
+        team1RoundInput.value = round.team1Input
+        team2RoundInput.value = round.team2Input
+        saveCurrentDraft()
+    }
+
+    fun recordRound(team1: TeamRoundInput, team2: TeamRoundInput): Boolean {
+        if (_isRecordingRound.value == true) return false
+        val match = getActiveMatch() ?: return false
+        val editing = match.gameState.rounds.find { it.id == editingRoundId.value }
+        val roundNumber = editing?.roundNumber
+            ?: ((match.gameState.rounds.maxOfOrNull { it.roundNumber } ?: 0) + 1)
+        val record = RoundRecord(
+            id = editing?.id ?: java.util.UUID.randomUUID().toString(),
+            roundNumber = roundNumber,
+            team1Input = team1,
+            team2Input = team2,
+            team1Result = ScoreCalculator.calculateScore(team1),
+            team2Result = ScoreCalculator.calculateScore(team2)
+        )
+        addRound(record)
+        clearRoundDraft()
+        return true
+    }
+
     fun addRound(record: RoundRecord) {
         val matchId = activeMatchId.value ?: return
         val currentStore = _matchesStore.value ?: return
@@ -187,24 +225,27 @@ class GameViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
             }
 
             val updatedRounds = resequenceRounds(newRounds)
-            var newStatus = match.status
-            if (checkIfGameEnded(match.gameState.copy(rounds = updatedRounds))) {
-                newStatus = MatchStatus.COMPLETED
+            val newStatus = if (checkIfGameEnded(match.gameState.copy(rounds = updatedRounds))) {
+                MatchStatus.COMPLETED
+            } else {
+                MatchStatus.ACTIVE
             }
 
             val updatedMatch = match.copy(
                 gameState = match.gameState.copy(rounds = updatedRounds),
                 status = newStatus,
+                draft = RoundDraft(useManualTotals = useManualTotals),
                 updatedAt = System.currentTimeMillis()
             )
             
             lastUndoableRound = record
+            replacedRound = match.gameState.rounds.getOrNull(existingIndex)
             lastUndoableMatchId = matchId
-            _lastRecordedRoundNumber.value = record.roundNumber
 
             val newList = currentStore.matches.toMutableList()
             newList[matchIndex] = updatedMatch
             _matchesStore.value = currentStore.copy(matches = newList)
+            _lastRecordedRoundNumber.value = record.roundNumber
         }
         _isRecordingRound.value = false
     }
@@ -217,30 +258,36 @@ class GameViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
         val matchIndex = currentStore.matches.indexOfFirst { it.id == matchId }
         if (matchIndex >= 0) {
             val match = currentStore.matches[matchIndex]
-            val newRounds = match.gameState.rounds.filter { it.id != round.id }
+            val newRounds = match.gameState.rounds.filter { it.id != round.id } + listOfNotNull(replacedRound)
             val updatedRounds = resequenceRounds(newRounds)
             
             // Restore draft from the undone round
+            useManualTotals = round.team1Input.manualRoundTotal != null
+            editingRoundId.value = replacedRound?.id
             team1RoundInput.value = round.team1Input
             team2RoundInput.value = round.team2Input
             
             val updatedMatch = match.copy(
                 gameState = match.gameState.copy(rounds = updatedRounds),
-                status = MatchStatus.ACTIVE, // Reverting completion if it happened
-                draft = RoundDraft(round.team1Input, round.team2Input),
+                status = if (checkIfGameEnded(match.gameState.copy(rounds = updatedRounds))) {
+                    MatchStatus.COMPLETED
+                } else {
+                    MatchStatus.ACTIVE
+                },
+                draft = RoundDraft(round.team1Input, round.team2Input, useManualTotals, replacedRound?.id),
                 updatedAt = System.currentTimeMillis()
             )
             val newList = currentStore.matches.toMutableList()
             newList[matchIndex] = updatedMatch
             _matchesStore.value = currentStore.copy(matches = newList)
             
-            lastUndoableRound = null
-            lastUndoableMatchId = null
+            clearUndo()
         }
     }
 
     fun clearUndo() {
         lastUndoableRound = null
+        replacedRound = null
         lastUndoableMatchId = null
     }
 

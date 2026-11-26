@@ -45,6 +45,8 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             replaceFragment(MatchesFragment())
+        } else {
+            binding.root.post { updateToolbar() }
         }
 
         viewModel.matchesStore.observe(this) { store ->
@@ -56,16 +58,16 @@ class MainActivity : AppCompatActivity() {
             applyTheme(mode)
         }
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.appBar) { v, insets ->
-            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            val cutouts = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
-            v.updatePadding(top = Math.max(bars.top, cutouts.top))
+        val safeArea = WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+        ViewCompat.setOnApplyWindowInsetsListener(binding.appBar) { view, insets ->
+            val edges = insets.getInsets(safeArea)
+            view.updatePadding(left = edges.left, top = edges.top, right = edges.right)
             insets
         }
-        
-        ViewCompat.setOnApplyWindowInsetsListener(binding.fragmentContainer) { v, insets ->
-            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.updatePadding(bottom = bars.bottom)
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.fragmentContainer) { view, insets ->
+            val edges = insets.getInsets(safeArea)
+            view.updatePadding(left = edges.left, right = edges.right, bottom = edges.bottom)
             insets
         }
 
@@ -141,7 +143,9 @@ class MainActivity : AppCompatActivity() {
             is MatchSetupFragment -> getString(R.string.new_match)
             is RoundInputFragment -> {
                 val match = viewModel.getActiveMatch()
-                val nextRound = (match?.gameState?.rounds?.maxByOrNull { it.roundNumber }?.roundNumber ?: 0) + 1
+                val rounds = match?.gameState?.rounds.orEmpty()
+                val nextRound = rounds.find { it.id == viewModel.editingRoundId.value }?.roundNumber
+                    ?: ((rounds.maxOfOrNull { it.roundNumber } ?: 0) + 1)
                 getString(R.string.round_number_label, nextRound)
             }
             is ResultFragment -> getString(R.string.preview_title)

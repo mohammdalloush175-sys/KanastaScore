@@ -212,4 +212,12 @@
     <string name="test_update_notification">اختبار إشعار التحديث (Debug)</string>
     <string name="no_published_releases">لا توجد إصدارات منشورة</string>
 
+    <string name="manual_round_switch">إدخال المجموع مباشرة</string>
+    <string name="manual_round_title">مجموع الجولة لكل فريق</string>
+    <string name="manual_round_description">أدخل صافي النقاط لكل فريق بعد جمع المكافآت وطرح الخصومات.</string>
+    <string name="manual_round_invalid">أدخل مجموعًا بين ‎−100000 و100000</string>
+    <string name="manual_round_save">حفظ الجولة ومتابعة</string>
+    <string name="manual_round_save_edit">حفظ التعديل</string>
+    <string name="other_developer_apps">تطبيقات أخرى من تطويري</string>
+    <string name="browser_unavailable">تعذّر فتح الرابط. تأكد من وجود متصفح.</string>
 </resources>

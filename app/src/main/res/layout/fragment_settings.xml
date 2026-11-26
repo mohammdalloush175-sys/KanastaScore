@@ -180,15 +180,31 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/spacing_24">
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_updates"
-                    style="@style/Widget.Material3.Button.TextButton"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/updates_summary"
-                    android:gravity="start|center_vertical"
-                    android:padding="@dimen/spacing_16"
-                    app:icon="@android:drawable/ic_popup_sync"/>
+                    android:orientation="vertical">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_updates"
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/updates_summary"
+                        android:gravity="start|center_vertical"
+                        android:padding="@dimen/spacing_16"
+                        app:icon="@android:drawable/ic_popup_sync"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_developer_apps"
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/other_developer_apps"
+                        android:gravity="start|center_vertical"
+                        android:padding="@dimen/spacing_16"
+                        app:icon="@android:drawable/ic_menu_view" />
+                </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <!-- About Section -->

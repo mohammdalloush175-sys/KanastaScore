@@ -6,9 +6,10 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
@@ -23,6 +24,7 @@ class RoundInputFragment : Fragment() {
 
     private var _binding: FragmentRoundInputBinding? = null
     private val binding get() = _binding!!
+    private var submittingRound = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentRoundInputBinding.inflate(inflater, container, false)
@@ -41,9 +43,14 @@ class RoundInputFragment : Fragment() {
         setupTeamSection(binding.sectionTeam1, 0, state.teams[0])
         setupTeamSection(binding.sectionTeam2, 1, state.teams[1])
 
+        setupManualTotals(state, viewModel)
         binding.btnPreview.setOnClickListener {
-            val t1 = viewModel.team1RoundInput.value!!
-            val t2 = viewModel.team2RoundInput.value!!
+            if (viewModel.useManualTotals) {
+                saveManualRound(mainActivity, viewModel)
+                return@setOnClickListener
+            }
+            val t1 = viewModel.team1RoundInput.value!!.copy(manualRoundTotal = null)
+            val t2 = viewModel.team2RoundInput.value!!.copy(manualRoundTotal = null)
             
             val error = ScoreValidator.validateRound(t1, t2)
             if (error != null) {
@@ -73,10 +80,89 @@ class RoundInputFragment : Fragment() {
         }
 
         viewModel.lastRecordedRoundNumber.observe(viewLifecycleOwner) { roundNumber ->
-            if (roundNumber != null) {
+            if (roundNumber != null && !submittingRound) {
                 showUndoSnackbar(roundNumber)
             }
         }
+    }
+
+    private fun setupManualTotals(state: GameState, viewModel: GameViewModel) {
+        val fields = binding.manualRound
+        fields.manualTeam1.hint = state.teams[0].name
+        fields.manualTeam2.hint = state.teams[1].name
+        fields.manualTeam1Score.setText(viewModel.team1RoundInput.value?.manualRoundTotal?.toString())
+        fields.manualTeam2Score.setText(viewModel.team2RoundInput.value?.manualRoundTotal?.toString())
+
+        setupTextWatcher(fields.manualTeam1Score) { text ->
+            fields.manualTeam1.error = null
+            viewModel.updateTeam1Input(viewModel.team1RoundInput.value!!.copy(manualRoundTotal = parseManualTotal(text)))
+        }
+        setupTextWatcher(fields.manualTeam2Score) { text ->
+            fields.manualTeam2.error = null
+            viewModel.updateTeam2Input(viewModel.team2RoundInput.value!!.copy(manualRoundTotal = parseManualTotal(text)))
+        }
+        fields.manualTeam2Score.setOnEditorActionListener { _, action, _ ->
+            if (action != android.view.inputmethod.EditorInfo.IME_ACTION_DONE) {
+                false
+            } else {
+                binding.btnPreview.performClick()
+                true
+            }
+        }
+
+        binding.switchManualTotals.isChecked = viewModel.useManualTotals
+        updateEntryMode(viewModel)
+        binding.switchManualTotals.setOnCheckedChangeListener { _, enabled ->
+            viewModel.useManualTotals = enabled
+            viewModel.saveCurrentDraft()
+            updateEntryMode(viewModel)
+            binding.scrollView.scrollTo(0, 0)
+        }
+    }
+
+    private fun updateEntryMode(viewModel: GameViewModel) {
+        val manual = viewModel.useManualTotals
+        binding.manualRound.root.isVisible = manual
+        binding.detailedRoundFields.isVisible = !manual
+        binding.btnPreview.setText(when {
+            !manual -> R.string.preview_result
+            viewModel.editingRoundId.value != null -> R.string.manual_round_save_edit
+            else -> R.string.manual_round_save
+        })
+        validateCurrentInputs()
+    }
+
+    private fun parseManualTotal(text: String): Int? =
+        text.trim().replace('\u2212', '-').toIntOrNull()?.takeIf { it in -100_000..100_000 }
+
+    private fun saveManualRound(mainActivity: MainActivity, viewModel: GameViewModel) {
+        val fields = binding.manualRound
+        val total1 = parseManualTotal(fields.manualTeam1Score.text.toString())
+        val total2 = parseManualTotal(fields.manualTeam2Score.text.toString())
+        fields.manualTeam1.error = if (total1 == null) getString(R.string.manual_round_invalid) else null
+        fields.manualTeam2.error = if (total2 == null) getString(R.string.manual_round_invalid) else null
+        if (total1 == null || total2 == null) {
+            (if (total1 == null) fields.manualTeam1Score else fields.manualTeam2Score).requestFocus()
+            return
+        }
+
+        submittingRound = true
+        if (!viewModel.recordRound(
+                TeamRoundInput(manualRoundTotal = total1),
+                TeamRoundInput(manualRoundTotal = total2)
+            )
+        ) {
+            submittingRound = false
+            return
+        }
+        binding.btnPreview.isEnabled = false
+        WindowInsetsControllerCompat(mainActivity.window, binding.root).hide(WindowInsetsCompat.Type.ime())
+        val destination = if (viewModel.getActiveMatch()?.status == MatchStatus.COMPLETED) {
+            MatchEndFragment()
+        } else {
+            RoundInputFragment()
+        }
+        mainActivity.replaceFragment(destination)
     }
 
     private fun showUndoSnackbar(roundNumber: Int) {
@@ -84,15 +170,15 @@ class RoundInputFragment : Fragment() {
         Snackbar.make(binding.root, getString(R.string.round_recorded_msg, roundNumber), Snackbar.LENGTH_LONG)
             .setAction(R.string.undo_label) {
                 viewModel.undoLastRound()
+                val mainActivity = activity as MainActivity
+                val destination = if (viewModel.getActiveMatch()?.status == MatchStatus.COMPLETED) {
+                    MatchEndFragment()
+                } else {
+                    RoundInputFragment()
+                }
+                mainActivity.replaceFragment(destination)
                 Toast.makeText(requireContext(), R.string.undo_label, Toast.LENGTH_SHORT).show()
             }
-            .addCallback(object : Snackbar.Callback() {
-                override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-                    if (event != DISMISS_EVENT_ACTION) {
-                        viewModel.clearUndo()
-                    }
-                }
-            })
             .show()
         viewModel.consumeRecordEvent() // Clear so it doesn't show again on rotation
     }
@@ -107,7 +193,8 @@ class RoundInputFragment : Fragment() {
     }
 
     private fun setupHeader(state: GameState, viewModel: GameViewModel) {
-        val nextRoundNumber = (state.rounds.maxByOrNull { it.roundNumber }?.roundNumber ?: 0) + 1
+        val nextRoundNumber = state.rounds.find { it.id == viewModel.editingRoundId.value }?.roundNumber
+            ?: ((state.rounds.maxOfOrNull { it.roundNumber } ?: 0) + 1)
         binding.tvRoundTitle.text = getString(R.string.round_number_label, nextRoundNumber)
         binding.tvTargetInfo.text = getString(R.string.target_score_info, state.targetScore)
 
@@ -280,6 +367,11 @@ class RoundInputFragment : Fragment() {
 
     private fun validateCurrentInputs() {
         val viewModel = (activity as MainActivity).viewModel
+        if (viewModel.useManualTotals) {
+            binding.btnPreview.isEnabled = true
+            binding.tvErrorMsg.isVisible = false
+            return
+        }
         val t1 = viewModel.team1RoundInput.value ?: return
         val t2 = viewModel.team2RoundInput.value ?: return
         

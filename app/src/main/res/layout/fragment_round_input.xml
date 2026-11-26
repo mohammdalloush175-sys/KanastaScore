@@ -96,37 +96,59 @@
         </LinearLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
+    <com.google.android.material.materialswitch.MaterialSwitch
+        android:id="@+id/switch_manual_totals"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:paddingHorizontal="@dimen/spacing_16"
+        android:text="@string/manual_round_switch"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/header_summary" />
+
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
-        app:layout_constraintTop_toBottomOf="@id/header_summary"
+        app:layout_constraintTop_toBottomOf="@id/switch_manual_totals"
         app:layout_constraintBottom_toTopOf="@id/bottom_bar">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="@dimen/spacing_12">
+            android:orientation="vertical">
 
-            <!-- Team 1 Section -->
             <include
-                android:id="@+id/section_team1"
-                layout="@layout/layout_team_round_input" />
+                android:id="@+id/manual_round"
+                layout="@layout/layout_manual_round" />
 
-            <View
+            <LinearLayout
+                android:id="@+id/detailed_round_fields"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/spacing_40"/>
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_12">
 
-            <!-- Team 2 Section -->
-            <include
-                android:id="@+id/section_team2"
-                layout="@layout/layout_team_round_input" />
+                <!-- Team 1 Section -->
+                <include
+                    android:id="@+id/section_team1"
+                    layout="@layout/layout_team_round_input" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/spacing_40"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/spacing_40"/>
+
+                <!-- Team 2 Section -->
+                <include
+                    android:id="@+id/section_team2"
+                    layout="@layout/layout_team_round_input" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/spacing_40"/>
+            </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

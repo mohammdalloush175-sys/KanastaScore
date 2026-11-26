@@ -94,45 +94,67 @@
         </LinearLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
+    <com.google.android.material.materialswitch.MaterialSwitch
+        android:id="@+id/switch_manual_totals"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:paddingHorizontal="@dimen/spacing_16"
+        android:text="@string/manual_round_switch"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/header_summary" />
+
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
-        app:layout_constraintTop_toBottomOf="@id/header_summary"
+        app:layout_constraintTop_toBottomOf="@id/switch_manual_totals"
         app:layout_constraintBottom_toTopOf="@id/bottom_bar">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="@dimen/spacing_24"
-            android:gravity="center_horizontal"
-            android:layout_marginHorizontal="@dimen/container_margin_horizontal"
-            android:layout_gravity="center_horizontal">
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/manual_round"
+                layout="@layout/layout_manual_round" />
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:id="@+id/detailed_round_fields"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-                <include
-                    android:id="@+id/section_team1"
-                    layout="@layout/layout_team_round_input" />
-            </LinearLayout>
+                android:orientation="horizontal"
+                android:padding="@dimen/spacing_24"
+                android:gravity="center_horizontal"
+                android:layout_marginHorizontal="@dimen/container_margin_horizontal"
+                android:layout_gravity="center_horizontal">
 
-            <View
-                android:layout_width="@dimen/spacing_24"
-                android:layout_height="match_parent"/>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <include
+                        android:id="@+id/section_team1"
+                        layout="@layout/layout_team_round_input" />
+                </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-                <include
-                    android:id="@+id/section_team2"
-                    layout="@layout/layout_team_round_input" />
+                <View
+                    android:layout_width="@dimen/spacing_24"
+                    android:layout_height="match_parent"/>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <include
+                        android:id="@+id/section_team2"
+                        layout="@layout/layout_team_round_input" />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
@@ -164,7 +186,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:minWidth="300dp"
+            android:minWidth="0dp"
             android:text="@string/preview_result"
             android:padding="@dimen/spacing_16"
             app:icon="@android:drawable/ic_menu_send"/>

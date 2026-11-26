@@ -62,6 +62,17 @@ class SettingsFragment : Fragment() {
             (activity as MainActivity).replaceFragment(UpdatesFragment(), true)
         }
         
+        binding.btnDeveloperApps.setOnClickListener {
+            try {
+                startActivity(android.content.Intent(
+                    android.content.Intent.ACTION_VIEW,
+                    android.net.Uri.parse("https://mohammd-apps.web.app/")
+                ))
+            } catch (_: android.content.ActivityNotFoundException) {
+                Toast.makeText(requireContext(), R.string.browser_unavailable, Toast.LENGTH_SHORT).show()
+            }
+        }
+
         binding.btnExport.setOnClickListener {
             val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
                 addCategory(Intent.CATEGORY_OPENABLE)

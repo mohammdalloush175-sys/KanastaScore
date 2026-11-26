@@ -39,9 +39,7 @@ class HistoryFragment : Fragment() {
         val adapter = HistoryAdapter(
             state.rounds,
             onEdit = { round ->
-                viewModel.editingRoundId.value = round.id
-                viewModel.updateTeam1Input(round.team1Input)
-                viewModel.updateTeam2Input(round.team2Input)
+                viewModel.editRound(round)
                 mainActivity.replaceFragment(RoundInputFragment())
             },
             onDelete = { round ->

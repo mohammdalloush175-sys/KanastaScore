@@ -39,6 +39,7 @@ object ScoreCalculator {
     }
 
     fun calculateScore(input: TeamRoundInput): ScoreBreakdown {
+        input.manualRoundTotal?.let { return ScoreBreakdown(total = it) }
         val details = mutableListOf<String>()
         val hasCanasta = if (input.scoringMode == MeldScoringMode.DETAILED) {
             input.melds.any { it.canastaType != null }
