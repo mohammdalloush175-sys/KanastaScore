@@ -96,8 +96,8 @@ class SettingsFragment : Fragment() {
                 .setMessage(R.string.confirm_delete_all_msg)
                 .setPositiveButton(R.string.yes) { _, _ ->
                     StorageHelper.clearAllData(requireContext())
-                    viewModel.setMatchesStore(MatchesStore())
-                    Toast.makeText(requireContext(), R.string.delete_match, Toast.LENGTH_SHORT).show()
+                    viewModel.deleteAllMatches()
+                    Toast.makeText(requireContext(), R.string.all_matches_deleted, Toast.LENGTH_SHORT).show()
                 }
                 .setNegativeButton(R.string.no, null)
                 .show()

@@ -95,6 +95,24 @@ class GameViewModelTest {
         assertEquals(MatchStatus.ACTIVE, viewModel.getActiveMatch()!!.status)
     }
 
+    @Test
+    fun deletingAllMatchesClearsActiveRoundDraftAndUndo() {
+        val viewModel = newMatch()
+        viewModel.useManualTotals = true
+        viewModel.recordRound(TeamRoundInput(manualRoundTotal = 50), TeamRoundInput(manualRoundTotal = 0))
+        viewModel.updateTeam1Input(TeamRoundInput(manualRoundTotal = 100))
+
+        viewModel.deleteAllMatches()
+        viewModel.undoLastRound()
+
+        assertTrue(viewModel.matchesStore.value!!.matches.isEmpty())
+        assertEquals(null, viewModel.matchesStore.value!!.activeMatchId)
+        assertEquals(null, viewModel.getActiveMatch())
+        assertEquals(null, viewModel.lastRecordedRoundNumber.value)
+        assertEquals(TeamRoundInput(), viewModel.team1RoundInput.value)
+        assertFalse(viewModel.useManualTotals)
+    }
+
     private fun newMatch(): GameViewModel =
         GameViewModel(SavedStateHandle()).apply {
             createNewMatch("Test", listOf(Team("A", emptyList()), Team("B", emptyList())), 5000)

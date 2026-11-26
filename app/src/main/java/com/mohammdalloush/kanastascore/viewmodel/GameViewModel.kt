@@ -80,6 +80,16 @@ class GameViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
         return newMatch.id
     }
 
+    fun deleteAllMatches() {
+        val current = _matchesStore.value ?: return
+        activeMatchId.value = null
+        useManualTotals = false
+        clearRoundDraft()
+        clearUndo()
+        consumeRecordEvent()
+        _matchesStore.value = current.copy(matches = emptyList(), activeMatchId = null)
+    }
+
     fun deleteMatch(matchId: String) {
         val current = _matchesStore.value ?: return
         val newList = current.matches.filter { it.id != matchId }

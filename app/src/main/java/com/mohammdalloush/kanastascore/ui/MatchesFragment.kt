@@ -60,10 +60,22 @@ class MatchesFragment : Fragment() {
             binding.emptyState.isVisible = matches.isEmpty()
             binding.rvMatches.isVisible = matches.isNotEmpty()
             binding.headerMatches.isVisible = matches.isNotEmpty()
+            binding.btnDeleteAllMatches.isVisible = matches.isNotEmpty()
         }
 
         binding.btnNewMatch.setOnClickListener {
             mainActivity.replaceFragment(MatchSetupFragment(), true)
+        }
+
+        binding.btnDeleteAllMatches.setOnClickListener {
+            AlertDialog.Builder(requireContext())
+                .setTitle(R.string.delete_all_matches)
+                .setMessage(R.string.confirm_delete_all_msg)
+                .setNegativeButton(android.R.string.cancel, null)
+                .setPositiveButton(R.string.delete_all_matches) { _, _ ->
+                    viewModel.deleteAllMatches()
+                }
+                .show()
         }
 
         binding.btnStats.setOnClickListener {

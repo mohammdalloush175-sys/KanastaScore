@@ -41,6 +41,19 @@
             app:icon="@android:drawable/ic_menu_manage"/>
     </LinearLayout>
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_delete_all_matches"
+        style="@style/Widget.Material3.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/spacing_12"
+        android:minHeight="48dp"
+        android:text="@string/delete_all_matches"
+        android:textColor="@color/negativeScore"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/header_matches"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_matches"
         android:layout_width="match_parent"
@@ -48,7 +61,7 @@
         android:clipToPadding="false"
         android:padding="@dimen/spacing_8"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintTop_toBottomOf="@id/header_matches"
+        app:layout_constraintTop_toBottomOf="@id/btn_delete_all_matches"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:listitem="@layout/item_match"/>
 

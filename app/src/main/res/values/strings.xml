@@ -25,6 +25,9 @@
     <string name="view_results">عرض النتائج</string>
     <string name="delete_match">حذف المباراة</string>
     <string name="confirm_delete_match">هل أنت متأكد من حذف هذه المباراة؟ لا يمكن التراجع عن هذا الإجراء.</string>
+    <string name="delete_all_matches">مسح جميع المباريات</string>
+    <string name="all_matches_deleted">تم حذف جميع المباريات</string>
+    <string name="match_created_at">تاريخ الإنشاء: %1$s</string>
     <string name="last_updated">آخر تحديث: %1$s</string>
     <string name="result_title_simple">نتيجة الجولة</string>
     <string name="confirm_abandon_setup">تجاهل إعداد المباراة الجديدة؟</string>

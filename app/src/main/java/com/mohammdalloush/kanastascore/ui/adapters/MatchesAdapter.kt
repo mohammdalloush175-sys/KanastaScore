@@ -3,6 +3,7 @@ package com.mohammdalloush.kanastascore.ui.adapters
 import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.mohammdalloush.kanastascore.R
 import com.mohammdalloush.kanastascore.databinding.ItemMatchBinding
@@ -29,6 +30,11 @@ class MatchesAdapter(
         val context = holder.itemView.context
 
         binding.tvMatchName.text = match.matchName
+        binding.cardCreatedAt.isVisible = match.createdAt > 0
+        if (binding.cardCreatedAt.isVisible) {
+            val date = DateUtils.formatDateTime(context, match.createdAt, DateUtils.FORMAT_SHOW_DATE or DateUtils.FORMAT_SHOW_YEAR)
+            binding.tvCreatedAt.text = context.getString(R.string.match_created_at, date)
+        }
         binding.tvUpdatedAt.text = context.getString(R.string.last_updated, DateUtils.getRelativeTimeSpanString(match.updatedAt))
         
         binding.tvStatus.text = if (match.status == MatchStatus.ACTIVE) context.getString(R.string.match_status_active) else context.getString(R.string.match_status_completed)
